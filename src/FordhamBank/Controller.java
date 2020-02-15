@@ -1,4 +1,4 @@
-package sample;
+package FordhamBank;
 
 public class Controller {
 }

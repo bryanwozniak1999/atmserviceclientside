@@ -1,4 +1,4 @@
-package sample;
+package FordhamBank.Aggregates;
 
 import java.util.UUID;
 
@@ -7,5 +7,9 @@ public class Aggregate {
 
     protected Aggregate() {
         Id = UUID.randomUUID();
+    }
+
+    public UUID GetId() {
+        return Id;
     }
 }
