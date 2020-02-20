@@ -33,6 +33,11 @@ public class User extends Aggregate {
     }
 
     public void AddBankAccount(BankAccount bankAccount) {
+        if (bankAccount.GetUserId() != Id) {
+            System.out.println("This bank account does not belong to this user");
+            return;
+        }
+
         BankAccounts.add(bankAccount);
     }
 }
