@@ -1,5 +1,8 @@
 package FordhamBank.Aggregates;
 
+import FordhamBank.Enums.AccountType;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -7,19 +10,35 @@ public class BankAccount extends Aggregate {
     private UUID UserId;
     private double Balance;
     private List<Transaction> Transactions;
+    private AccountType AccountType;
 
-    public BankAccount(UUID userId) {
+    public BankAccount(UUID userId, AccountType accountType) {
         super();
 
+        AccountType = accountType;
         UserId = userId;
+        Transactions = new ArrayList<>();
+        Balance = 0;
     }
 
     public double GetBalance() {
         return Balance;
     }
 
-    public void SetBalance(double balance) {
-        Balance = balance;
+    public void Deposit(double amount) {
+        Balance += amount;
+    }
+
+    public void Withdraw(double amount) {
+        double newBalance = Balance - amount;
+
+        if (newBalance <= 0) {
+            //ToDo: remove this sysout
+            System.out.println("Cannot have a negative balance");
+            return;
+        }
+
+        Balance = newBalance;
     }
 
     public UUID GetUserId() {

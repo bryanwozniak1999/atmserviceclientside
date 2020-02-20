@@ -1,5 +1,6 @@
 package FordhamBank.Aggregates;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class User extends Aggregate {
@@ -12,6 +13,7 @@ public class User extends Aggregate {
 
         FirstName = firstName;
         LastName = lastName;
+        BankAccounts = new ArrayList<>();
     }
 
     public String GetFirstName() {
