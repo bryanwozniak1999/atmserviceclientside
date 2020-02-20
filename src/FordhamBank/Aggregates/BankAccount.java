@@ -11,14 +11,20 @@ public class BankAccount extends Aggregate {
     private double Balance;
     private List<Transaction> Transactions;
     private AccountType AccountType;
+    private String AccountName;
 
-    public BankAccount(UUID userId, AccountType accountType) {
+    public BankAccount(UUID userId, AccountType accountType, String accountName) {
         super();
 
         AccountType = accountType;
+        AccountName = accountName;
         UserId = userId;
         Transactions = new ArrayList<>();
         Balance = 0;
+    }
+
+    public String GetAccountName() {
+        return AccountName;
     }
 
     public double GetBalance() {
@@ -27,6 +33,10 @@ public class BankAccount extends Aggregate {
 
     public void Deposit(double amount) {
         Balance += amount;
+    }
+
+    public AccountType GetAccountType() {
+        return AccountType;
     }
 
     public void Withdraw(double amount) {
