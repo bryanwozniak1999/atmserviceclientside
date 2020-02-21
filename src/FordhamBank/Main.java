@@ -56,9 +56,10 @@ public class Main extends Application {
         
         left.setSpacing(10);
         left.setPadding(new Insets(10));
-        
 
-
+        Label name = new Label("Hello, " + user.GetFullName());
+        root.getChildren().add(name);
+        // bank accounts on the left
         for (BankAccount bankAccount : user.GetBankAccounts()) {
         	leftInner.getChildren().add(bankAccountListItem(bankAccount));
         }
@@ -69,16 +70,16 @@ public class Main extends Application {
         add.setStyle("-fx-background-color: #800000; -fx-text-fill: white");
         left.getChildren().add(add);
 
-        //ToDo 2: Create Pie Chart
 
+        //donut chart on the right
         ObservableList<PieChart.Data> pieChartData = createData(user);
 
         DonutChart donut = new DonutChart(pieChartData);
-        donut.setTitle("Account Overview");
+        donut.setTitle("Total Balance: " + totalBalance(user));
 
-        VBox right = new VBox(donut); // for the pie chart.
+        VBox right = new VBox(donut);
 
-
+        // add the layouts to main
         main.getChildren().add(left);
         main.getChildren().add(right);
 
@@ -142,6 +143,17 @@ public class Main extends Application {
         container.getChildren().add(buttonsList);
 
         return container;
+    }
+
+    private double totalBalance(User user) {
+        double totalBalance = 0.0;
+
+        for (BankAccount bankAccount : user.GetBankAccounts()) {
+            totalBalance += bankAccount.GetBalance();
+        }
+
+        totalBalance = 0.01 * Math.floor(totalBalance * 100.0);
+        return totalBalance;
     }
 
     private ObservableList<PieChart.Data> createData(User user) {
