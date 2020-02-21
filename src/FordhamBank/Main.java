@@ -28,17 +28,7 @@ public class Main extends Application {
     public void start(Stage primaryStage) {
         //data set up
         User user = new User("John", "Doe");
-
-        BankAccount account1 = new BankAccount(user.GetId(), AccountType.CHECKING, "My Checking");
-        account1.Deposit(35300.33);
-        BankAccount account2 = new BankAccount(user.GetId(), AccountType.CD, "My CD");
-        account2.Deposit(39000);
-        BankAccount account3 = new BankAccount(user.GetId(), AccountType.SAVINGS, "College Savings");
-        account3.Deposit(11023);
-
-        user.AddBankAccount(account1);
-        user.AddBankAccount(account2);
-        user.AddBankAccount(account3);
+        setAccounts(user);
 
         VBox root = new VBox();
         root.setPadding(new Insets(10));
@@ -90,6 +80,19 @@ public class Main extends Application {
         primaryStage.setTitle("Accounts Summary");
         primaryStage.setScene(scene);
         primaryStage.show();
+    }
+    
+    private void setAccounts(User user) {
+    	BankAccount account1 = new BankAccount(user.GetId(), AccountType.CHECKING, "My Checking");
+        account1.Deposit(35300.33);
+        BankAccount account2 = new BankAccount(user.GetId(), AccountType.CD, "My CD");
+        account2.Deposit(39000);
+        BankAccount account3 = new BankAccount(user.GetId(), AccountType.SAVINGS, "College Savings");
+        account3.Deposit(11023);
+
+        user.AddBankAccount(account1);
+        user.AddBankAccount(account2);
+        user.AddBankAccount(account3);
     }
 
     private String getTypeString(AccountType type) {
