@@ -4,17 +4,21 @@ import FordhamBank.Aggregates.BankAccount;
 import FordhamBank.Aggregates.User;
 import FordhamBank.Enums.AccountType;
 import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
-import javafx.geometry.Pos;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.chart.PieChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 // hell
 
@@ -52,9 +56,10 @@ public class Main extends Application {
         
         left.setSpacing(10);
         left.setPadding(new Insets(10));
-        
-        VBox right = new VBox(); // for the pie chart.
 
+        Label name = new Label("Hello, " + user.GetFullName());
+        root.getChildren().add(name);
+        // bank accounts on the left
         for (BankAccount bankAccount : user.GetBankAccounts()) {
         	leftInner.getChildren().add(bankAccountListItem(bankAccount));
         }
@@ -64,13 +69,22 @@ public class Main extends Application {
         Button add = new Button("Add Account");
         add.setStyle("-fx-background-color: #800000; -fx-text-fill: white");
         left.getChildren().add(add);
-        
-        main.getChildren().add(left);
-        root.getChildren().add(main);
-        
 
-        //ToDo 2: Create Pie Chart
-        
+
+        //donut chart on the right
+        ObservableList<PieChart.Data> pieChartData = createData(user);
+
+        DonutChart donut = new DonutChart(pieChartData);
+        donut.setTitle("Total Balance: " + totalBalance(user));
+
+        VBox right = new VBox(donut);
+
+        // add the layouts to main
+        main.getChildren().add(left);
+        main.getChildren().add(right);
+
+        root.getChildren().add(main);
+
         Scene scene = new Scene(root, 800, 600);
         
         primaryStage.setTitle("Accounts Summary");
@@ -129,6 +143,23 @@ public class Main extends Application {
         container.getChildren().add(buttonsList);
 
         return container;
+    }
+
+    private double totalBalance(User user) {
+        double totalBalance = 0.0;
+
+        for (BankAccount bankAccount : user.GetBankAccounts()) {
+            totalBalance += bankAccount.GetBalance();
+        }
+
+        totalBalance = 0.01 * Math.floor(totalBalance * 100.0);
+        return totalBalance;
+    }
+
+    private ObservableList<PieChart.Data> createData(User user) {
+        return FXCollections.observableArrayList(user.GetBankAccounts().stream().map(bankAccount -> {
+            return new PieChart.Data(bankAccount.GetAccountName(), bankAccount.GetBalance());
+        }).collect(Collectors.toList()));
     }
     
     public static void main(String[] args) {
