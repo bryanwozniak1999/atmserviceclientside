@@ -65,6 +65,7 @@ public class Main extends Application {
         ObservableList<PieChart.Data> pieChartData = createData(user);
 
         DonutChart donut = new DonutChart(pieChartData);
+        
         donut.setTitle("Total Balance: " + totalBalance(user));
 
         VBox right = new VBox(donut);
@@ -163,6 +164,14 @@ public class Main extends Application {
         return FXCollections.observableArrayList(user.GetBankAccounts().stream().map(bankAccount -> {
             return new PieChart.Data(bankAccount.GetAccountName(), bankAccount.GetBalance());
         }).collect(Collectors.toList()));
+    }
+    
+    private Stage transactionWindow(BankAccount account) {
+    	Stage window = new Stage();
+    	
+    	
+    	
+    	return window;
     }
     
     public static void main(String[] args) {
