@@ -78,9 +78,13 @@ public class Main extends Application {
 
         Scene scene = new Scene(root, 800, 600);
         
+        TransactionWindow test = new TransactionWindow();
+        
+        
         primaryStage.setTitle("Accounts Summary");
         primaryStage.setScene(scene);
         primaryStage.show();
+        test.show();
     }
     
     private void setAccounts(User user) {
