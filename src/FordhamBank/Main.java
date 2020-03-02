@@ -13,12 +13,10 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 // hell
 
@@ -42,6 +40,7 @@ public class Main extends Application {
 
         VBox root = new VBox();
         root.setPadding(new Insets(10));
+        root.getStylesheets().add("/FordhamBank/styles.css");
         
         // This HBox is used to have the accounts and Pie chart side by side
         HBox main = new HBox();
@@ -67,7 +66,7 @@ public class Main extends Application {
         left.getChildren().add(leftScroll);
         
         Button add = new Button("Add Account");
-        add.setStyle("-fx-background-color: #800000; -fx-text-fill: white");
+        add.getStyleClass().add("button");
         left.getChildren().add(add);
 
 
@@ -108,7 +107,7 @@ public class Main extends Application {
 
     private VBox bankAccountListItem(BankAccount bankAccount) {
         VBox container = new VBox();
-        container.setStyle("-fx-border-color: black");
+        container.getStyleClass().add("bank-account-container");
         container.setPadding(new Insets(15));
 
         HBox infoContainer = new HBox(); // aligns the account name and account type labels.
@@ -119,24 +118,24 @@ public class Main extends Application {
         infoContainer.getChildren().addAll(accountType, accountName);
 
         Label balanceLabel = new Label("Available Balance");
-        balanceLabel.setStyle("-fx-padding: 10 0 0 0");
+        balanceLabel.getStyleClass().add("pt-10");
         Label balanceAmount = new Label("$" + Double.toString(bankAccount.GetBalance()));
-        balanceAmount.setStyle("-fx-padding: 0 0 10 0");
-        Label yield = new Label("Annual Percentage Yield: 0.40%");
+        balanceAmount.getStyleClass().add("pb-10");
 
-        container.getChildren().addAll(infoContainer, balanceLabel, balanceAmount, yield);
+        container.getChildren().addAll(infoContainer, balanceLabel, balanceAmount);
 
         HBox buttonsList = new HBox();
         buttonsList.setSpacing(5);
 
         Button withdraw = new Button("Withdraw");
-        withdraw.setStyle("-fx-background-color: #800000; -fx-text-fill: white");
+        withdraw.getStyleClass().add("button");
         Button deposit = new Button("Deposit");
-        deposit.setStyle("-fx-background-color: #800000; -fx-text-fill: white");
+        deposit.getStyleClass().add("button");
         Button transfer = new Button("Transfer");
-        transfer.setStyle("-fx-background-color: #800000; -fx-text-fill: white");
+        transfer.getStyleClass().add("button");
         Button history = new Button("History");
-        history.setStyle("-fx-background-color: #800000; -fx-text-fill: white");
+        history.getStyleClass().add("button");
+        history.getStyleClass().add("button");
         buttonsList.getChildren().addAll(withdraw, deposit, transfer, history);
         buttonsList.setPadding(new Insets(10, 0, 0, 0));
 
