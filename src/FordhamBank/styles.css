@@ -1,0 +1,16 @@
+.button {
+  -fx-background-color: #800000;
+  -fx-text-fill: white;
+}
+
+.bank-account-container {
+  -fx-border-color: black;
+}
+
+.pt-10 {
+  -fx-padding: 10 0 0 0;
+}
+
+.pb-10 {
+  -fx-padding: 0 0 10 0;
+}
