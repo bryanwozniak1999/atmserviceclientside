@@ -96,20 +96,6 @@ public class Main extends Application {
         primaryStage.show();
     }
 
-    private String getTypeString(AccountType type) {
-    	String typeString = "";
-    	
-    	if (type == AccountType.CD) {
-    		typeString = "CD";
-    	} else if (type == AccountType.CHECKING) {
-    		typeString = "Checking";
-    	} else if (type == AccountType.SAVINGS) {
-    		typeString = "Savings";
-    	}
-    	
-    	return typeString;
-    }
-
     private VBox bankAccountListItem(BankAccount bankAccount) {
         VBox container = new VBox();
         container.getStyleClass().add("bank-account-container");
@@ -118,7 +104,7 @@ public class Main extends Application {
         HBox infoContainer = new HBox(); // aligns the account name and account type labels.
 
         Label accountName = new Label(bankAccount.GetAccountName());
-        Label accountType = new Label(getTypeString(bankAccount.GetAccountType()) + " - ");
+        Label accountType = new Label(bankAccount.GetAccountType().toString() + " - ");
 
         infoContainer.getChildren().addAll(accountType, accountName);
 
