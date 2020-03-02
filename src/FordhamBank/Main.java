@@ -3,6 +3,7 @@ package FordhamBank;
 import FordhamBank.Aggregates.BankAccount;
 import FordhamBank.Aggregates.User;
 import FordhamBank.Enums.AccountType;
+import FordhamBank.Utilities.EventUtils;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -21,6 +22,7 @@ import java.util.stream.Collectors;
 // hell
 
 public class Main extends Application {
+    EventUtils eventUtils = new EventUtils();
 
     @Override
     public void start(Stage primaryStage) {
@@ -66,6 +68,9 @@ public class Main extends Application {
         left.getChildren().add(leftScroll);
         
         Button add = new Button("Add Account");
+        add.setOnAction(e -> {
+            eventUtils.FireAddAccountButtonClickEvent();
+        });
         add.getStyleClass().add("button");
         left.getChildren().add(add);
 
@@ -129,13 +134,24 @@ public class Main extends Application {
 
         Button withdraw = new Button("Withdraw");
         withdraw.getStyleClass().add("button");
+        withdraw.setOnAction(e -> {
+            eventUtils.FireWithdrawButtonClickEvent();
+        });
         Button deposit = new Button("Deposit");
         deposit.getStyleClass().add("button");
+        deposit.setOnAction(e -> {
+            eventUtils.FireDepositButtonClickEvent();
+        });
         Button transfer = new Button("Transfer");
         transfer.getStyleClass().add("button");
+        transfer.setOnAction(e -> {
+            eventUtils.FireTransferButtonClickEvent();
+        });
         Button history = new Button("History");
         history.getStyleClass().add("button");
-        history.getStyleClass().add("button");
+        history.setOnAction(e -> {
+            eventUtils.FireHistoryButtonClickEvent();
+        });
         buttonsList.getChildren().addAll(withdraw, deposit, transfer, history);
         buttonsList.setPadding(new Insets(10, 0, 0, 0));
 
