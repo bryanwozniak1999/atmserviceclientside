@@ -21,23 +21,23 @@ public class Transaction extends Aggregate {
         TransactionType = type;
     }
 
-    public Date GetTransactionDate() {
+    public Date getTransactionDate() {
         return TransactionDate;
     }
 
-    public String GetTransactionName() {
+    public String getTransactionName() {
         return TransactionName;
     }
 
-    public double GetAmount() {
+    public double getAmount() {
         return Amount;
     }
     
-    public double GetBalance() {
+    public double getBalance() {
     	return CurrentBalance;
     }
     
-    public TransactionType GetTransactionType() {
+    public TransactionType getTransactionType() {
     	return TransactionType;
     }
 }
