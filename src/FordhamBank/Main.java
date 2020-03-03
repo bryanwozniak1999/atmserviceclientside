@@ -77,14 +77,12 @@ public class Main extends Application {
         root.getChildren().add(main);
 
         Scene scene = new Scene(root, 800, 600);
-        
-        TransactionWindow test = new TransactionWindow();
+       
         
         
         primaryStage.setTitle("Accounts Summary");
         primaryStage.setScene(scene);
         primaryStage.show();
-        test.show();
     }
     
     private void setAccounts(User user) {
@@ -144,6 +142,12 @@ public class Main extends Application {
         Button transfer = new Button("Transfer");
         transfer.setStyle("-fx-background-color: #800000; -fx-text-fill: white");
         Button history = new Button("History");
+        
+        history.setOnAction(e -> {
+        	TransactionWindow window = new TransactionWindow(bankAccount);
+        	window.show();
+        });
+        
         history.setStyle("-fx-background-color: #800000; -fx-text-fill: white");
         buttonsList.getChildren().addAll(withdraw, deposit, transfer, history);
         buttonsList.setPadding(new Insets(10, 0, 0, 0));
@@ -168,14 +172,6 @@ public class Main extends Application {
         return FXCollections.observableArrayList(user.GetBankAccounts().stream().map(bankAccount -> {
             return new PieChart.Data(bankAccount.GetAccountName(), bankAccount.GetBalance());
         }).collect(Collectors.toList()));
-    }
-    
-    private Stage transactionWindow(BankAccount account) {
-    	Stage window = new Stage();
-    	
-    	
-    	
-    	return window;
     }
     
     public static void main(String[] args) {
