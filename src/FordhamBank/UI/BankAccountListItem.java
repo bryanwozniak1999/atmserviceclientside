@@ -85,19 +85,7 @@ public class BankAccountListItem {
         Label amountLabel = new Label("Amount: ");
         amountLabel.getStyleClass().add("pr-10");
 
-        TextField amountTextField = new TextField();
-
-        // Numeric only TextField
-        // https://stackoverflow.com/questions/7555564/what-is-the-recommended-way-to-make-a-numeric-textfield-in-javafx
-        amountTextField.textProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue,
-                                String newValue) {
-                if (!newValue.matches("\\d*")) {
-                    amountTextField.setText(newValue.replaceAll("[^\\d]", ""));
-                }
-            }
-        });
+        TextField amountTextField = new NumericTextField();
 
         Button submitButton = new Button("Submit");
         submitButton.setOnAction(e -> {
@@ -125,19 +113,7 @@ public class BankAccountListItem {
         Label amountLabel = new Label("Amount: ");
         amountLabel.getStyleClass().add("pr-10");
 
-        TextField amountTextField = new TextField();
-
-        // Numeric only TextField
-        // https://stackoverflow.com/questions/7555564/what-is-the-recommended-way-to-make-a-numeric-textfield-in-javafx
-        amountTextField.textProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue,
-                                String newValue) {
-                if (!newValue.matches("\\d*")) {
-                    amountTextField.setText(newValue.replaceAll("[^\\d]", ""));
-                }
-            }
-        });
+        TextField amountTextField = new NumericTextField();
 
         Button submitButton = new Button("Submit");
 
