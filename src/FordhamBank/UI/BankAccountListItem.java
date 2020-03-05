@@ -16,6 +16,8 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
+import java.text.DecimalFormat;
+
 public class BankAccountListItem {
 
     public static VBox Create(User user, BankAccount bankAccount, VBox donutChartContainer) {
@@ -35,7 +37,7 @@ public class BankAccountListItem {
 
         Label balanceLabel = new Label("Available Balance");
         balanceLabel.getStyleClass().add("pt-10");
-        Label balanceAmount = new Label("$" + bankAccount.GetBalance());
+        Label balanceAmount = new Label("$" + new DecimalFormat("#.##").format(bankAccount.GetBalance()));
         balanceAmount.getStyleClass().add("pb-10");
 
         container.getChildren().addAll(infoContainer, balanceLabel, balanceAmount);
@@ -77,7 +79,7 @@ public class BankAccountListItem {
         modal.setTitle("Withdraw");
         BankAccountChangeInputForm content = new BankAccountChangeInputForm(user, bankAccount, balanceAmount, donutChartContainer, new WithdrawEvent());
 
-        initScene(content);
+        initScene(content,  300, 100);
     }
 
     private static void fireTransferButtonClickEvent() {
@@ -89,7 +91,7 @@ public class BankAccountListItem {
         modal.setTitle("Deposit");
         BankAccountChangeInputForm content = new BankAccountChangeInputForm(user, bankAccount, balanceAmount, donutChartContainer, new DepositEvent());
 
-        initScene(content);
+        initScene(content, 300, 100);
     }
 
     private static void fireHistoryButtonClickEvent() {
@@ -97,8 +99,8 @@ public class BankAccountListItem {
         modal.show();
     }
 
-    private static void initScene(Pane pane) {
-        Scene scene = new Scene(pane, 500, 400);
+    private static void initScene(Pane pane, int width, int height) {
+        Scene scene = new Scene(pane, width, height);
         modal.setScene(scene);
         modal.show();
     }

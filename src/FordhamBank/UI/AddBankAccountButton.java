@@ -3,6 +3,7 @@ package FordhamBank.UI;
 import FordhamBank.Aggregates.BankAccount;
 import FordhamBank.Aggregates.User;
 import FordhamBank.Enums.AccountType;
+import FordhamBank.Factories.DonutChartFactory;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
@@ -84,10 +85,6 @@ public class AddBankAccountButton {
         user.AddBankAccount(newAccount);
         bankAccountListContent.getChildren().add(BankAccountListItem.Create(user, newAccount, donutChartContainer));
 
-        ObservableList<PieChart.Data> newPieChartData = DonutChart.createData(user);
-        DonutChart newDonut = new DonutChart(newPieChartData);
-
-        donutChartContainer.getChildren().clear();
-        donutChartContainer.getChildren().add(newDonut);
+        DonutChartFactory.CreateAndDisplay(user, donutChartContainer);
     }
 }

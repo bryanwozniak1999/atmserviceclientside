@@ -16,6 +16,8 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
+import java.text.DecimalFormat;
+
 // hell
 
 public class Main extends Application {
@@ -74,7 +76,7 @@ public class Main extends Application {
         ObservableList<PieChart.Data> pieChartData = DonutChart.createData(user);
 
         DonutChart donut = new DonutChart(pieChartData);
-        donut.setTitle("Total Balance: $" + user.getTotalBalance());
+        donut.setTitle("Total Balance: $" + new DecimalFormat("#.##").format(user.getTotalBalance()));
 
         donutChartContainer.getChildren().add(donut);
         // add the layouts to main
