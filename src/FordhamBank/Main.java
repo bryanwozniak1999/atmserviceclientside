@@ -3,18 +3,19 @@ package FordhamBank;
 import FordhamBank.Aggregates.BankAccount;
 import FordhamBank.Aggregates.User;
 import FordhamBank.Enums.AccountType;
-import FordhamBank.Utilities.EventUtils;
+import FordhamBank.UI.BankAccountListItem;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.chart.PieChart;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
+import javafx.scene.control.*;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.util.stream.Collectors;
@@ -22,8 +23,6 @@ import java.util.stream.Collectors;
 // hell
 
 public class Main extends Application {
-    EventUtils eventUtils = new EventUtils();
-
     @Override
     public void start(Stage primaryStage) {
         //data set up
@@ -46,33 +45,37 @@ public class Main extends Application {
         
         // This HBox is used to have the accounts and Pie chart side by side
         HBox main = new HBox();
-        
-        VBox left = new VBox(), leftInner = new VBox();
-        leftInner.setMinWidth(350);
-        leftInner.setSpacing(10);
-        ScrollPane leftScroll = new ScrollPane(leftInner);
+
+
+        VBox bankAccountListContainer = new VBox(),
+                bankAccountListContent = new VBox(),
+                donutChartContainer = new VBox();
+
+        bankAccountListContent.setMinWidth(350);
+        bankAccountListContent.setSpacing(10);
+        ScrollPane leftScroll = new ScrollPane(bankAccountListContent);
         leftScroll.setMinWidth(360);
         leftScroll.setMaxHeight(500);
         leftScroll.setFitToWidth(true);
         
-        left.setSpacing(10);
-        left.setPadding(new Insets(10));
+        bankAccountListContainer.setSpacing(10);
+        bankAccountListContainer.setPadding(new Insets(10));
 
         Label name = new Label("Hello, " + user.GetFullName());
         root.getChildren().add(name);
         // bank accounts on the left
         for (BankAccount bankAccount : user.GetBankAccounts()) {
-        	leftInner.getChildren().add(bankAccountListItem(bankAccount));
+        	bankAccountListContent.getChildren().add(BankAccountListItem.Create(bankAccount));
         }
         
-        left.getChildren().add(leftScroll);
+        bankAccountListContainer.getChildren().add(leftScroll);
         
         Button add = new Button("Add Account");
         add.setOnAction(e -> {
-            eventUtils.FireAddAccountButtonClickEvent();
+            fireAddAccountButtonClickEvent(user, bankAccountListContent, donutChartContainer);
         });
         add.getStyleClass().add("button");
-        left.getChildren().add(add);
+        bankAccountListContainer.getChildren().add(add);
 
 
         //donut chart on the right
@@ -81,11 +84,10 @@ public class Main extends Application {
         DonutChart donut = new DonutChart(pieChartData);
         donut.setTitle("Total Balance: " + totalBalance(user));
 
-        VBox right = new VBox(donut);
-
+        donutChartContainer.getChildren().add(donut);
         // add the layouts to main
-        main.getChildren().add(left);
-        main.getChildren().add(right);
+        main.getChildren().add(bankAccountListContainer);
+        main.getChildren().add(donutChartContainer);
 
         root.getChildren().add(main);
 
@@ -96,54 +98,66 @@ public class Main extends Application {
         primaryStage.show();
     }
 
-    private VBox bankAccountListItem(BankAccount bankAccount) {
-        VBox container = new VBox();
-        container.getStyleClass().add("bank-account-container");
-        container.setPadding(new Insets(15));
+    private void fireAddAccountButtonClickEvent(User user, VBox bankAccountListContent, VBox donutChartContainer) {
+        Stage modal = new Stage();
+        modal.initModality(Modality.APPLICATION_MODAL);
+        modal.setTitle("Add Account");
 
-        HBox infoContainer = new HBox(); // aligns the account name and account type labels.
+        GridPane content = new GridPane();
+        content.setPadding(new Insets(15, 15, 15, 15));
+        content.setVgap(20);
 
-        Label accountName = new Label(bankAccount.GetAccountName());
-        Label accountType = new Label(bankAccount.GetAccountType().toString() + " - ");
+        Label accountNameLabel = new Label("Account Name: ");
+        accountNameLabel.getStyleClass().add("pr-10");
 
-        infoContainer.getChildren().addAll(accountType, accountName);
+        TextField accountNameTextField = new TextField();
 
-        Label balanceLabel = new Label("Available Balance");
-        balanceLabel.getStyleClass().add("pt-10");
-        Label balanceAmount = new Label("$" + Double.toString(bankAccount.GetBalance()));
-        balanceAmount.getStyleClass().add("pb-10");
+        Label accountTypeLabel = new Label("Account Type: ");
+        accountTypeLabel.getStyleClass().add("pr-10");
 
-        container.getChildren().addAll(infoContainer, balanceLabel, balanceAmount);
+        ObservableList<String> options =
+                FXCollections.observableArrayList(
+                        AccountType.SAVINGS.toString(),
+                        AccountType.CHECKING.toString(),
+                        AccountType.CD.toString()
+                );
 
-        HBox buttonsList = new HBox();
-        buttonsList.setSpacing(5);
+        ComboBox accountTypeDropdown = new ComboBox(options);
 
-        Button withdraw = new Button("Withdraw");
-        withdraw.getStyleClass().add("button");
-        withdraw.setOnAction(e -> {
-            eventUtils.FireWithdrawButtonClickEvent();
+        Button submitButton = new Button("Submit");
+        submitButton.setOnAction(e -> {
+            String accountType = (String) accountTypeDropdown.getValue();
+            addAccount(user, bankAccountListContent, donutChartContainer, accountNameTextField.getText(), AccountType.valueOf(accountType));
         });
-        Button deposit = new Button("Deposit");
-        deposit.getStyleClass().add("button");
-        deposit.setOnAction(e -> {
-            eventUtils.FireDepositButtonClickEvent();
-        });
-        Button transfer = new Button("Transfer");
-        transfer.getStyleClass().add("button");
-        transfer.setOnAction(e -> {
-            eventUtils.FireTransferButtonClickEvent();
-        });
-        Button history = new Button("History");
-        history.getStyleClass().add("button");
-        history.setOnAction(e -> {
-            eventUtils.FireHistoryButtonClickEvent();
-        });
-        buttonsList.getChildren().addAll(withdraw, deposit, transfer, history);
-        buttonsList.setPadding(new Insets(10, 0, 0, 0));
 
-        container.getChildren().add(buttonsList);
+        content.add(accountNameLabel, 0, 0);
+        content.add(accountNameTextField, 1, 0);
 
-        return container;
+        content.add(accountTypeLabel, 0, 1);
+        content.add(accountTypeDropdown, 1, 1);
+
+        content.add(submitButton, 0, 2);
+
+        initScene(content, modal);
+    }
+
+    private void initScene(Pane pane, Stage modal) {
+        Scene scene = new Scene(pane, 500, 400);
+        modal.setScene(scene);
+        modal.show();
+    }
+
+    private void addAccount(User user, VBox bankAccountListContent, VBox donutChartContainer, String accountName, AccountType accountType) {
+        BankAccount newAccount = new BankAccount(user.GetId(), accountType, accountName);
+
+        user.AddBankAccount(newAccount);
+        bankAccountListContent.getChildren().add(BankAccountListItem.Create(newAccount));
+
+        ObservableList<PieChart.Data> newPieChartData = createData(user);
+        DonutChart newDonut = new DonutChart(newPieChartData);
+
+        donutChartContainer.getChildren().clear();
+        donutChartContainer.getChildren().add(newDonut);
     }
 
     private double totalBalance(User user) {
