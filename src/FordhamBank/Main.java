@@ -3,22 +3,18 @@ package FordhamBank;
 import FordhamBank.Aggregates.BankAccount;
 import FordhamBank.Aggregates.User;
 import FordhamBank.Enums.AccountType;
+import FordhamBank.UI.AddBankAccountButton;
 import FordhamBank.UI.BankAccountListItem;
+import FordhamBank.UI.DonutChart;
 import javafx.application.Application;
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.chart.PieChart;
 import javafx.scene.control.*;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
-
-import java.util.stream.Collectors;
 
 // hell
 
@@ -70,16 +66,12 @@ public class Main extends Application {
         
         bankAccountListContainer.getChildren().add(leftScroll);
         
-        Button add = new Button("Add Account");
-        add.setOnAction(e -> {
-            fireAddAccountButtonClickEvent(user, bankAccountListContent, donutChartContainer);
-        });
-        add.getStyleClass().add("button");
+        Button add = AddBankAccountButton.Create(user, bankAccountListContent, donutChartContainer);
+
         bankAccountListContainer.getChildren().add(add);
 
-
         //donut chart on the right
-        ObservableList<PieChart.Data> pieChartData = createData(user);
+        ObservableList<PieChart.Data> pieChartData = DonutChart.createData(user);
 
         DonutChart donut = new DonutChart(pieChartData);
         donut.setTitle("Total Balance: " + totalBalance(user));
@@ -98,68 +90,6 @@ public class Main extends Application {
         primaryStage.show();
     }
 
-    private void fireAddAccountButtonClickEvent(User user, VBox bankAccountListContent, VBox donutChartContainer) {
-        Stage modal = new Stage();
-        modal.initModality(Modality.APPLICATION_MODAL);
-        modal.setTitle("Add Account");
-
-        GridPane content = new GridPane();
-        content.setPadding(new Insets(15, 15, 15, 15));
-        content.setVgap(20);
-
-        Label accountNameLabel = new Label("Account Name: ");
-        accountNameLabel.getStyleClass().add("pr-10");
-
-        TextField accountNameTextField = new TextField();
-
-        Label accountTypeLabel = new Label("Account Type: ");
-        accountTypeLabel.getStyleClass().add("pr-10");
-
-        ObservableList<String> options =
-                FXCollections.observableArrayList(
-                        AccountType.SAVINGS.toString(),
-                        AccountType.CHECKING.toString(),
-                        AccountType.CD.toString()
-                );
-
-        ComboBox accountTypeDropdown = new ComboBox(options);
-
-        Button submitButton = new Button("Submit");
-        submitButton.setOnAction(e -> {
-            String accountType = (String) accountTypeDropdown.getValue();
-            addAccount(user, bankAccountListContent, donutChartContainer, accountNameTextField.getText(), AccountType.valueOf(accountType));
-        });
-
-        content.add(accountNameLabel, 0, 0);
-        content.add(accountNameTextField, 1, 0);
-
-        content.add(accountTypeLabel, 0, 1);
-        content.add(accountTypeDropdown, 1, 1);
-
-        content.add(submitButton, 0, 2);
-
-        initScene(content, modal);
-    }
-
-    private void initScene(Pane pane, Stage modal) {
-        Scene scene = new Scene(pane, 500, 400);
-        modal.setScene(scene);
-        modal.show();
-    }
-
-    private void addAccount(User user, VBox bankAccountListContent, VBox donutChartContainer, String accountName, AccountType accountType) {
-        BankAccount newAccount = new BankAccount(user.GetId(), accountType, accountName);
-
-        user.AddBankAccount(newAccount);
-        bankAccountListContent.getChildren().add(BankAccountListItem.Create(newAccount));
-
-        ObservableList<PieChart.Data> newPieChartData = createData(user);
-        DonutChart newDonut = new DonutChart(newPieChartData);
-
-        donutChartContainer.getChildren().clear();
-        donutChartContainer.getChildren().add(newDonut);
-    }
-
     private double totalBalance(User user) {
         double totalBalance = 0.0;
 
@@ -169,12 +99,6 @@ public class Main extends Application {
 
         totalBalance = 0.01 * Math.floor(totalBalance * 100.0);
         return totalBalance;
-    }
-
-    private ObservableList<PieChart.Data> createData(User user) {
-        return FXCollections.observableArrayList(user.GetBankAccounts().stream().map(bankAccount -> {
-            return new PieChart.Data(bankAccount.GetAccountName(), bankAccount.GetBalance());
-        }).collect(Collectors.toList()));
     }
     
     public static void main(String[] args) {
