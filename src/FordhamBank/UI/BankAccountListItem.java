@@ -2,13 +2,10 @@ package FordhamBank.UI;
 
 import FordhamBank.Aggregates.BankAccount;
 import FordhamBank.Aggregates.User;
-import FordhamBank.Enums.AccountType;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javafx.collections.ObservableList;
+import FordhamBank.Events.BankAccountChangeEvents.DepositEvent;
+import FordhamBank.Events.BankAccountChangeEvents.WithdrawEvent;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
-import javafx.scene.chart.PieChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -78,23 +75,7 @@ public class BankAccountListItem {
 
     private static void fireWithdrawButtonClickEvent(User user, BankAccount bankAccount, Label balanceAmount, VBox donutChartContainer) {
         modal.setTitle("Withdraw");
-        GridPane content = new GridPane();
-        content.setPadding(new Insets(15, 15, 15, 15));
-        content.setVgap(20);
-
-        Label amountLabel = new Label("Amount: ");
-        amountLabel.getStyleClass().add("pr-10");
-
-        TextField amountTextField = new NumericTextField();
-
-        Button submitButton = new Button("Submit");
-        submitButton.setOnAction(e -> {
-            withdrawFromAccount(user, bankAccount, balanceAmount, donutChartContainer, amountTextField.getText());
-        });
-
-        content.add(amountLabel, 0, 0);
-        content.add(amountTextField, 1, 0);
-        content.add(submitButton, 0, 1);
+        BankAccountChangeInputForm content = new BankAccountChangeInputForm(user, bankAccount, balanceAmount, donutChartContainer, new WithdrawEvent());
 
         initScene(content);
     }
@@ -106,24 +87,7 @@ public class BankAccountListItem {
 
     private static void fireDepositButtonClickEvent(User user, BankAccount bankAccount, Label balanceAmount, VBox donutChartContainer) {
         modal.setTitle("Deposit");
-        GridPane content = new GridPane();
-        content.setPadding(new Insets(15, 15, 15, 15));
-        content.setVgap(20);
-
-        Label amountLabel = new Label("Amount: ");
-        amountLabel.getStyleClass().add("pr-10");
-
-        TextField amountTextField = new NumericTextField();
-
-        Button submitButton = new Button("Submit");
-
-        submitButton.setOnAction(e -> {
-            depositToAccount(user, bankAccount, balanceAmount, donutChartContainer, amountTextField.getText());
-        });
-
-        content.add(amountLabel, 0, 0);
-        content.add(amountTextField, 1, 0);
-        content.add(submitButton, 0, 1);
+        BankAccountChangeInputForm content = new BankAccountChangeInputForm(user, bankAccount, balanceAmount, donutChartContainer, new DepositEvent());
 
         initScene(content);
     }
@@ -137,28 +101,5 @@ public class BankAccountListItem {
         Scene scene = new Scene(pane, 500, 400);
         modal.setScene(scene);
         modal.show();
-    }
-
-    private static void withdrawFromAccount(User user, BankAccount bankAccount, Label balanceLabel, VBox donutChartContainer, String amount) {
-        bankAccount.Withdraw(Double.parseDouble(amount));
-
-        updateBalanceLabelAndChart(user, bankAccount, balanceLabel, donutChartContainer);
-    }
-
-    private static void depositToAccount(User user, BankAccount bankAccount, Label balanceLabel, VBox donutChartContainer, String amount) {
-        bankAccount.Deposit(Double.parseDouble(amount));
-
-        updateBalanceLabelAndChart(user, bankAccount, balanceLabel, donutChartContainer);
-    }
-
-    private static void updateBalanceLabelAndChart(User user, BankAccount bankAccount, Label balanceLabel, VBox donutChartContainer) {
-        balanceLabel.setText("$" + bankAccount.GetBalance());
-
-        ObservableList<PieChart.Data> newPieChartData = DonutChart.createData(user);
-        DonutChart newDonut = new DonutChart(newPieChartData);
-        newDonut.setTitle("Total Balance: $" + user.getTotalBalance());
-
-        donutChartContainer.getChildren().clear();
-        donutChartContainer.getChildren().add(newDonut);
     }
 }
