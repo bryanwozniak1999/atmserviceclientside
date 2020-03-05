@@ -54,7 +54,7 @@ public class BankAccountListItem {
         Button deposit = new Button("Deposit");
         deposit.getStyleClass().add("button");
         deposit.setOnAction(e -> {
-            fireDepositButtonClickEvent();
+            fireDepositButtonClickEvent(user, bankAccount, balanceAmount, donutChartContainer);
         });
         Button transfer = new Button("Transfer");
         transfer.getStyleClass().add("button");
@@ -116,9 +116,40 @@ public class BankAccountListItem {
         modal.show();
     }
 
-    private static void fireDepositButtonClickEvent() {
+    private static void fireDepositButtonClickEvent(User user, BankAccount bankAccount, Label balanceAmount, VBox donutChartContainer) {
         modal.setTitle("Deposit");
-        modal.show();
+        GridPane content = new GridPane();
+        content.setPadding(new Insets(15, 15, 15, 15));
+        content.setVgap(20);
+
+        Label amountLabel = new Label("Amount: ");
+        amountLabel.getStyleClass().add("pr-10");
+
+        TextField amountTextField = new TextField();
+
+        // Numeric only TextField
+        // https://stackoverflow.com/questions/7555564/what-is-the-recommended-way-to-make-a-numeric-textfield-in-javafx
+        amountTextField.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue,
+                                String newValue) {
+                if (!newValue.matches("\\d*")) {
+                    amountTextField.setText(newValue.replaceAll("[^\\d]", ""));
+                }
+            }
+        });
+
+        Button submitButton = new Button("Submit");
+
+        submitButton.setOnAction(e -> {
+            depositToAccount(user, bankAccount, balanceAmount, donutChartContainer, amountTextField.getText());
+        });
+
+        content.add(amountLabel, 0, 0);
+        content.add(amountTextField, 1, 0);
+        content.add(submitButton, 0, 1);
+
+        initScene(content);
     }
 
     private static void fireHistoryButtonClickEvent() {
@@ -134,6 +165,17 @@ public class BankAccountListItem {
 
     private static void withdrawFromAccount(User user, BankAccount bankAccount, Label balanceLabel, VBox donutChartContainer, String amount) {
         bankAccount.Withdraw(Double.parseDouble(amount));
+
+        updateBalanceLabelAndChart(user, bankAccount, balanceLabel, donutChartContainer);
+    }
+
+    private static void depositToAccount(User user, BankAccount bankAccount, Label balanceLabel, VBox donutChartContainer, String amount) {
+        bankAccount.Deposit(Double.parseDouble(amount));
+
+        updateBalanceLabelAndChart(user, bankAccount, balanceLabel, donutChartContainer);
+    }
+
+    private static void updateBalanceLabelAndChart(User user, BankAccount bankAccount, Label balanceLabel, VBox donutChartContainer) {
         balanceLabel.setText("$" + bankAccount.GetBalance());
 
         ObservableList<PieChart.Data> newPieChartData = DonutChart.createData(user);
