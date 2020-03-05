@@ -37,7 +37,7 @@ public class Main extends Application {
 
         VBox root = new VBox();
         root.setPadding(new Insets(10));
-        root.getStylesheets().add("/FordhamBank/styles.css");
+        root.getStylesheets().add("/FordhamBank/Styles/styles.css");
         
         // This HBox is used to have the accounts and Pie chart side by side
         HBox main = new HBox();
@@ -61,11 +61,11 @@ public class Main extends Application {
         root.getChildren().add(name);
         // bank accounts on the left
         for (BankAccount bankAccount : user.GetBankAccounts()) {
-        	bankAccountListContent.getChildren().add(BankAccountListItem.Create(bankAccount));
+        	bankAccountListContent.getChildren().add(BankAccountListItem.Create(user, bankAccount, donutChartContainer));
         }
         
         bankAccountListContainer.getChildren().add(leftScroll);
-        
+
         Button add = AddBankAccountButton.Create(user, bankAccountListContent, donutChartContainer);
 
         bankAccountListContainer.getChildren().add(add);
@@ -74,7 +74,7 @@ public class Main extends Application {
         ObservableList<PieChart.Data> pieChartData = DonutChart.createData(user);
 
         DonutChart donut = new DonutChart(pieChartData);
-        donut.setTitle("Total Balance: " + totalBalance(user));
+        donut.setTitle("Total Balance: $" + user.getTotalBalance());
 
         donutChartContainer.getChildren().add(donut);
         // add the layouts to main
@@ -88,17 +88,6 @@ public class Main extends Application {
         primaryStage.setTitle("Accounts Summary");
         primaryStage.setScene(scene);
         primaryStage.show();
-    }
-
-    private double totalBalance(User user) {
-        double totalBalance = 0.0;
-
-        for (BankAccount bankAccount : user.GetBankAccounts()) {
-            totalBalance += bankAccount.GetBalance();
-        }
-
-        totalBalance = 0.01 * Math.floor(totalBalance * 100.0);
-        return totalBalance;
     }
     
     public static void main(String[] args) {

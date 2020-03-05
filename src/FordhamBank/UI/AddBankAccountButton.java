@@ -82,7 +82,7 @@ public class AddBankAccountButton {
         BankAccount newAccount = new BankAccount(user.GetId(), accountType, accountName);
 
         user.AddBankAccount(newAccount);
-        bankAccountListContent.getChildren().add(BankAccountListItem.Create(newAccount));
+        bankAccountListContent.getChildren().add(BankAccountListItem.Create(user, newAccount, donutChartContainer));
 
         ObservableList<PieChart.Data> newPieChartData = DonutChart.createData(user);
         DonutChart newDonut = new DonutChart(newPieChartData);
