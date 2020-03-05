@@ -6,13 +6,13 @@ import javafx.scene.control.TextField;
 
 public class NumericTextField extends TextField {
     public NumericTextField() {
-        // https://stackoverflow.com/questions/7555564/what-is-the-recommended-way-to-make-a-numeric-textfield-in-javafx
+        // http://www.tutorialsface.com/2016/12/how-to-make-numeric-decimal-textfield-in-javafx-example-tutorial/
         textProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue,
                                 String newValue) {
-                if (!newValue.matches("\\d*")) {
-                    setText(newValue.replaceAll("[^\\d]", ""));
+                if (!newValue.matches("\\d*([\\.]\\d*)?")) {
+                    setText(oldValue);
                 }
             }
         });

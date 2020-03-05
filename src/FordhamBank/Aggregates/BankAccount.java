@@ -28,7 +28,7 @@ public class BankAccount extends Aggregate {
     }
 
     public double GetBalance() {
-        return Balance;
+        return Math.floor(Balance * 100) / 100;
     }
 
     public void Deposit(double amount) {
