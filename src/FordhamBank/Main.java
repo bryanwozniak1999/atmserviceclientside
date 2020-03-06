@@ -97,18 +97,25 @@ public class Main extends Application {
         primaryStage.setScene(scene);
         primaryStage.show();
 
-        Button btn = new Button();
-        btn.setMaxHeight(50);
-        btn.setMaxWidth(50);
-        btn.setText("HELP");
+        Button helpButton = new Button();
+        helpButton.setMaxHeight(50);
+        helpButton.setMaxWidth(50);
+        helpButton.setText("HELP");
 
-        btn.setOnAction(event -> {
+        helpButton.setOnAction(event -> {
             HelpWindow helpWindow = new HelpWindow(primaryStage);
 
             helpWindow.show();
         });
 
-        bankAccountListButtons.getChildren().add(btn);
+        Button exitButton = new Button();
+        exitButton.setText("EXIT");
+
+        exitButton.setOnAction(e -> {
+            primaryStage.close();
+        });
+
+        bankAccountListButtons.getChildren().addAll(helpButton, exitButton);
 
         bankAccountListContainer.getChildren().add(bankAccountListButtons);
 
