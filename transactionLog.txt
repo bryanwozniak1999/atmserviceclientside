@@ -1,0 +1,11 @@
+03-05-2020 23.45.36 : User deposited 35300.33 to My Checking
+03-05-2020 23.45.36 : User deposited 39000.0 to My CD
+03-05-2020 23.45.36 : User deposited 11023.0 to College Savings
+03-05-2020 23.46.15 : User withdrew 100.0 from My Checking
+03-05-2020 23.47.15 : User deposited 235.0 to My CD
+03-05-2020 23.47.49 : User withdrew 20000.5 from My CD
+03-05-2020 23.47.49 : User deposited 20000.5 to College Savings
+03-05-2020 23.48.14 : John Doe has created a new account called Secondary
+03-05-2020 23.55.20 : User deposited 35300.33 to My Checking
+03-05-2020 23.55.20 : User deposited 39000.0 to My CD
+03-05-2020 23.55.20 : User deposited 11023.0 to College Savings

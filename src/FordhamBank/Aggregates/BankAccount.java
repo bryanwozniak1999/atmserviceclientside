@@ -1,5 +1,6 @@
 package FordhamBank.Aggregates;
 
+import FordhamBank.fileIO;
 import FordhamBank.Enums.AccountType;
 import FordhamBank.Enums.OperationResult;
 import FordhamBank.Enums.TransactionType;
@@ -15,6 +16,9 @@ public class BankAccount extends Aggregate {
     private List<Transaction> Transactions;
     private AccountType AccountType;
     private String AccountName;
+    
+    // used for writing transactions to transactionLog
+    private fileIO FileW; 
 
     @Override
     public String toString() {
@@ -29,6 +33,7 @@ public class BankAccount extends Aggregate {
         UserId = userId;
         Transactions = new ArrayList<>();
         Balance = 0;
+        FileW = new fileIO();
     }
 
     public String GetAccountName() {
@@ -48,6 +53,7 @@ public class BankAccount extends Aggregate {
         Balance = Math.floor(Balance * 100) / 100;
 
         AddTransaction(new Transaction(new Date(), amount, Balance, TransactionType.DEPOSIT));
+        FileW.wrTransactionData("User deposited " + amount + " to " + AccountName);
     }
 
     public AccountType GetAccountType() {
@@ -68,6 +74,7 @@ public class BankAccount extends Aggregate {
         Balance = Math.floor(Balance * 100) / 100;
 
         AddTransaction(new Transaction(new Date(), amount, Balance, TransactionType.WITHDRAWAL));
+        FileW.wrTransactionData("User withdrew " + amount + " from " + AccountName);
 
         return OperationResult.SUCCESS;
     }
