@@ -9,3 +9,11 @@
 03-05-2020 23.55.20 : User deposited 35300.33 to My Checking
 03-05-2020 23.55.20 : User deposited 39000.0 to My CD
 03-05-2020 23.55.20 : User deposited 11023.0 to College Savings
+03-06-2020 00.23.08 : User deposited 35300.33 to My Checking
+03-06-2020 00.23.08 : User deposited 39000.0 to My CD
+03-06-2020 00.23.08 : User deposited 11023.0 to College Savings
+03-06-2020 00.23.18 : User withdrew 5000.0 from College Savings
+03-06-2020 00.23.44 : User deposited 35300.33 to My Checking
+03-06-2020 00.23.44 : User deposited 39000.0 to My CD
+03-06-2020 00.23.44 : User deposited 11023.0 to College Savings
+03-06-2020 00.23.52 : John Doe has created a new account called New Account
