@@ -5,6 +5,7 @@ import FordhamBank.Aggregates.User;
 import FordhamBank.Enums.AccountType;
 
 import FordhamBank.Factories.BankAccountListFactory;
+import FordhamBank.Factories.DonutChartFactory;
 import FordhamBank.UI.AddBankAccountButton;
 import FordhamBank.UI.DonutChart;
 
@@ -22,11 +23,14 @@ import javafx.scene.chart.PieChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Paint;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
+import java.awt.*;
 import java.text.SimpleDateFormat;
 
 import java.util.Date;
@@ -78,14 +82,8 @@ public class Main extends Application {
         bankAccountListButtons.getChildren().add(add);
 
         //donut chart on the right
-        ObservableList<PieChart.Data> pieChartData = DonutChart.createData(user);
+        DonutChartFactory.CreateAndDisplay(user);
 
-        DonutChart donut = new DonutChart(pieChartData);
-
-        donut.setTitle("Total Balance: $" + new DecimalFormat("#.##").format(user.getTotalBalance()));
-
-
-        donutChartContainer.getChildren().add(donut);
         // add the layouts to main
         main.getChildren().add(bankAccountListContainer);
         main.getChildren().add(donutChartContainer);
@@ -93,9 +91,8 @@ public class Main extends Application {
         root.getChildren().add(main);
 
         Scene scene = new Scene(root, 800, 600);
-       
-        
-        
+        scene.setFill(Paint.valueOf("WHITE"));
+
         primaryStage.setTitle("Accounts Summary");
         primaryStage.setScene(scene);
         primaryStage.show();

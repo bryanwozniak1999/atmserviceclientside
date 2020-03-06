@@ -5,6 +5,7 @@ import FordhamBank.Main;
 import FordhamBank.UI.DonutChart;
 import javafx.collections.ObservableList;
 import javafx.scene.chart.PieChart;
+import javafx.scene.image.ImageView;
 
 import java.text.DecimalFormat;
 
@@ -16,5 +17,9 @@ public class DonutChartFactory {
 
         Main.donutChartContainer.getChildren().clear();
         Main.donutChartContainer.getChildren().add(newDonut);
+
+        ImageView logoView = new ImageView("FordhamBank/Resources/FordhamLogo.png");
+        logoView.translateXProperty().setValue(25);
+        Main.donutChartContainer.getChildren().add(logoView);
     }
 }
