@@ -9,8 +9,6 @@ import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
@@ -18,8 +16,6 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.text.DecimalFormat;
-
-import static FordhamBank.Main.donutChartContainer;
 
 public class BankAccountListItem {
 
@@ -66,7 +62,7 @@ public class BankAccountListItem {
         Button history = new Button("History");
         history.getStyleClass().add("button");
         history.setOnAction(e -> {
-            fireHistoryButtonClickEvent();
+            fireHistoryButtonClickEvent(bankAccount);
         });
         buttonsList.getChildren().addAll(withdraw, deposit, transfer, history);
         buttonsList.setPadding(new Insets(10, 0, 0, 0));
@@ -99,9 +95,11 @@ public class BankAccountListItem {
         initScene(content, 300, 100);
     }
 
-    private static void fireHistoryButtonClickEvent() {
+    private static void fireHistoryButtonClickEvent(BankAccount bankAccount) {
         modal.setTitle("History");
-        modal.show();
+
+        TransactionWindow window = new TransactionWindow(bankAccount);
+        window.show();
     }
 
     private static void initScene(Pane pane, int width, int height) {

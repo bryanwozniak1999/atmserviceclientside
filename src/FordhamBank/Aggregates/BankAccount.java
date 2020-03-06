@@ -2,8 +2,10 @@ package FordhamBank.Aggregates;
 
 import FordhamBank.Enums.AccountType;
 import FordhamBank.Enums.OperationResult;
+import FordhamBank.Enums.TransactionType;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -34,11 +36,14 @@ public class BankAccount extends Aggregate {
     }
 
     public double GetBalance() {
-        return Math.floor(Balance * 100) / 100;
+        Balance = Math.floor(Balance * 100) / 100;
+        return Balance;
     }
 
     public void Deposit(double amount) {
         Balance += amount;
+
+        AddTransaction(new Transaction(new Date(), amount, Balance, TransactionType.DEPOSIT));
     }
 
     public AccountType GetAccountType() {
@@ -54,6 +59,8 @@ public class BankAccount extends Aggregate {
 
         Balance = newBalance;
 
+        AddTransaction(new Transaction(new Date(), amount, Balance, TransactionType.WITHDRAWAL));
+
         return OperationResult.SUCCESS;
     }
 
@@ -65,7 +72,7 @@ public class BankAccount extends Aggregate {
         return Transactions;
     }
 
-    public void AddTransaction(Transaction transaction) {
+    private void AddTransaction(Transaction transaction) {
         Transactions.add(transaction);
     }
 }

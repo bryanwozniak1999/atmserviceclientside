@@ -1,6 +1,8 @@
-package FordhamBank;
+package FordhamBank.UI;
 
+import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 
 import FordhamBank.Aggregates.BankAccount;
 import FordhamBank.Aggregates.Transaction;
@@ -48,28 +50,28 @@ public class TransactionWindow {
 		
 		
 		TableView<Transaction> table = new TableView<>();
-		table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+		table.setColumnResizePolicy(TableView.UNCONSTRAINED_RESIZE_POLICY);
 		
 		// the following line is used to create an observableArrayList from the account list of transactions
 		// this line can be removed if the transaction list variable in bank account is converted to ObservableList.
 		// would only have to call table.setItems(account.GetTransactions);
+		Collections.reverse(account.GetTransactions());
 		ObservableList<Transaction> data = FXCollections.observableArrayList(account.GetTransactions());
 		
 		
 		TableColumn<Transaction, Date> date = new TableColumn<>("Date");
-		TableColumn<Transaction, String> desc = new TableColumn<>("Description");
 		TableColumn<Transaction, Double> amount = new TableColumn<>("Amount");
 		TableColumn<Transaction, Double> balance = new TableColumn<>("Balance");
 		TableColumn<Transaction, TransactionType> type = new TableColumn<>("Type");
 		
 		// binds each column to an attribute of a Transaction object
 		date.setCellValueFactory(new PropertyValueFactory<Transaction, Date>("TransactionDate"));
-		desc.setCellValueFactory(new PropertyValueFactory<Transaction, String>("TransactionName"));
 		amount.setCellValueFactory(new PropertyValueFactory<Transaction, Double>("Amount"));
 		balance.setCellValueFactory(new PropertyValueFactory<Transaction, Double>("Balance"));
 		type.setCellValueFactory(new PropertyValueFactory<Transaction, TransactionType>("TransactionType"));
 		
-		table.getColumns().addAll(date, desc, amount, balance, type);
+		table.getColumns().addAll(date, amount, balance, type);
+		table.getSortOrder().add(date);
 		table.setItems(data);
 		
 		
