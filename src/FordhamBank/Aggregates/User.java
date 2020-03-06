@@ -40,4 +40,15 @@ public class User extends Aggregate {
 
         BankAccounts.add(bankAccount);
     }
+
+    public double getTotalBalance() {
+        double totalBalance = 0.0;
+
+        for (BankAccount bankAccount : this.GetBankAccounts()) {
+            totalBalance += bankAccount.GetBalance();
+        }
+
+        totalBalance = 0.01 * Math.floor(totalBalance * 100.0);
+        return totalBalance;
+    }
 }
