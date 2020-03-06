@@ -3,6 +3,7 @@ package FordhamBank.UI;
 import FordhamBank.Aggregates.BankAccount;
 import FordhamBank.Aggregates.User;
 import FordhamBank.Enums.AccountType;
+import FordhamBank.Enums.OperationResult;
 import FordhamBank.Factories.BankAccountListFactory;
 import FordhamBank.Factories.DonutChartFactory;
 import FordhamBank.Main;
@@ -19,6 +20,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -59,10 +61,22 @@ public class AddBankAccountButton {
 
         ComboBox accountTypeDropdown = new ComboBox(options);
 
+        Label resultLabel = new Label();
+
         Button submitButton = new Button("Submit");
         submitButton.setOnAction(e -> {
-            String accountType = (String) accountTypeDropdown.getValue();
-            addAccount(user, accountNameTextField.getText(), AccountType.valueOf(accountType));
+            try {
+                String accountType = (String) accountTypeDropdown.getValue();
+                addAccount(user, accountNameTextField.getText(), AccountType.valueOf(accountType));
+
+                resultLabel.setTextFill(Color.LIGHTGREEN);
+                resultLabel.setText("Success!");
+                resultLabel.setWrapText(true);
+            } catch(NullPointerException err) {
+                resultLabel.setTextFill(Color.RED);
+                resultLabel.setText("ERROR: Please enter all fields.");
+                resultLabel.setWrapText(true);
+            }
         });
 
         content.add(accountNameLabel, 0, 0);
@@ -73,11 +87,13 @@ public class AddBankAccountButton {
 
         content.add(submitButton, 0, 2);
 
+        content.add(resultLabel, 0, 3);
+
         initScene(content, modal);
     }
 
     private static void initScene(Pane pane, Stage modal) {
-        Scene scene = new Scene(pane, 300, 200);
+        Scene scene = new Scene(pane, 400, 300);
         modal.setScene(scene);
         modal.show();
     }
