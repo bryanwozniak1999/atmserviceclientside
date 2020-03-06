@@ -41,7 +41,11 @@ public class BankAccount extends Aggregate {
     }
 
     public void Deposit(double amount) {
+        amount = Math.floor(amount * 100) / 100;
+
         Balance += amount;
+
+        Balance = Math.floor(Balance * 100) / 100;
 
         AddTransaction(new Transaction(new Date(), amount, Balance, TransactionType.DEPOSIT));
     }
@@ -51,6 +55,8 @@ public class BankAccount extends Aggregate {
     }
 
     public OperationResult Withdraw(double amount) {
+        amount = Math.floor(amount * 100) / 100;
+
         double newBalance = Balance - amount;
 
         if (newBalance <= 0) {
@@ -58,6 +64,8 @@ public class BankAccount extends Aggregate {
         }
 
         Balance = newBalance;
+
+        Balance = Math.floor(Balance * 100) / 100;
 
         AddTransaction(new Transaction(new Date(), amount, Balance, TransactionType.WITHDRAWAL));
 

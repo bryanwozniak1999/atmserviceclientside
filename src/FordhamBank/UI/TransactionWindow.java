@@ -55,8 +55,8 @@ public class TransactionWindow {
 		// the following line is used to create an observableArrayList from the account list of transactions
 		// this line can be removed if the transaction list variable in bank account is converted to ObservableList.
 		// would only have to call table.setItems(account.GetTransactions);
-		Collections.reverse(account.GetTransactions());
 		ObservableList<Transaction> data = FXCollections.observableArrayList(account.GetTransactions());
+		Collections.reverse(data);
 		
 		
 		TableColumn<Transaction, Date> date = new TableColumn<>("Date");
