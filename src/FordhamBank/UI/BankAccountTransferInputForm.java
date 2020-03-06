@@ -42,12 +42,18 @@ public class BankAccountTransferInputForm extends GridPane {
         Button submitButton = new Button("Submit");
 
         submitButton.setOnAction(e -> {
-            OperationResult result = submitEvent.fireEvent(user, bankAccount,(BankAccount) accountDropDown.getValue(), amountTextField.getText());
+            try {
+                OperationResult result = submitEvent.fireEvent(user, bankAccount,(BankAccount) accountDropDown.getValue(), amountTextField.getText());
 
-            if (result == OperationResult.FAIL && errorLabel.getText() == "") {
-                errorLabel.setText("ERROR: This transaction puts balance of " + bankAccount.toString() + " below zero.");
+                if (result == OperationResult.FAIL) {
+                    errorLabel.setText("ERROR: This transaction puts balance of " + bankAccount.toString() + " below zero.");
+                    errorLabel.setWrapText(true);
+                } else {
+                    errorLabel.setText("");
+                }
+            } catch(NumberFormatException err) {
+                errorLabel.setText("ERROR: Please enter an amount.");
                 errorLabel.setWrapText(true);
-                this.add(errorLabel, 0, 5);
             }
         });
 
@@ -56,5 +62,6 @@ public class BankAccountTransferInputForm extends GridPane {
         this.add(accountLabel, 0, 2);
         this.add(accountDropDown, 0, 3);
         this.add(submitButton, 0, 4);
+        this.add(errorLabel, 0, 5);
     }
 }
