@@ -3,39 +3,24 @@ package FordhamBank;
 import FordhamBank.Aggregates.BankAccount;
 import FordhamBank.Aggregates.User;
 import FordhamBank.Enums.AccountType;
-
 import FordhamBank.Factories.BankAccountListFactory;
 import FordhamBank.Factories.DonutChartFactory;
 import FordhamBank.UI.AddBankAccountButton;
-import FordhamBank.UI.DonutChart;
-
 import FordhamBank.UI.HelpWindow;
 import javafx.application.Application;
-
 import javafx.application.Platform;
-
-
-import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
-import javafx.scene.chart.PieChart;
-
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Paint;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-
-import java.awt.*;
 import java.text.SimpleDateFormat;
-
 import java.util.Date;
-import java.text.DecimalFormat;
-
 
 public class Main extends Application {
     public static VBox bankAccountListContent = new VBox();

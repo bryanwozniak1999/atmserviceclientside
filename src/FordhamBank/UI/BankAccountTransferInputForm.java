@@ -54,6 +54,7 @@ public class BankAccountTransferInputForm extends GridPane {
                 } else {
                     resultLabel.setTextFill(Color.LIGHTGREEN);
                     resultLabel.setText("SUCCESS! " + bankAccount.GetAccountName() + " Balance: $" + bankAccount.GetBalance() + "\n\t" + selectedBankAccount.GetAccountName() + " Balance: $" + selectedBankAccount.GetBalance());
+                    amountTextField.setText("");
                 }
             } catch(NumberFormatException err) {
                 resultLabel.setTextFill(Color.RED);
