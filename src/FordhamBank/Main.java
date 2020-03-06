@@ -1,26 +1,20 @@
 package FordhamBank;
 
 import FordhamBank.Aggregates.BankAccount;
-import FordhamBank.Aggregates.Transaction;
 import FordhamBank.Aggregates.User;
 import FordhamBank.Enums.AccountType;
 
-import FordhamBank.Enums.TransactionType;
-
 import FordhamBank.Factories.BankAccountListFactory;
 import FordhamBank.UI.AddBankAccountButton;
-import FordhamBank.UI.BankAccountListItem;
 import FordhamBank.UI.DonutChart;
 
+import FordhamBank.UI.HelpWindow;
 import javafx.application.Application;
 
 import javafx.application.Platform;
-import javafx.collections.FXCollections;
 
 
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.chart.PieChart;
@@ -28,23 +22,14 @@ import javafx.scene.chart.PieChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-
-import javafx.scene.control.*;
-
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.text.SimpleDateFormat;
 
 import java.util.Date;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import java.text.DecimalFormat;
 
 
@@ -68,6 +53,9 @@ public class Main extends Application {
 
         VBox bankAccountListContainer = new VBox();
 
+        HBox bankAccountListButtons = new HBox();
+        bankAccountListButtons.setSpacing(15);
+
         bankAccountListContent.setMinWidth(350);
         bankAccountListContent.setSpacing(10);
         ScrollPane leftScroll = new ScrollPane(bankAccountListContent);
@@ -87,7 +75,7 @@ public class Main extends Application {
 
         Button add = AddBankAccountButton.Create(user);
 
-        bankAccountListContainer.getChildren().add(add);
+        bankAccountListButtons.getChildren().add(add);
 
         //donut chart on the right
         ObservableList<PieChart.Data> pieChartData = DonutChart.createData(user);
@@ -111,60 +99,22 @@ public class Main extends Application {
         primaryStage.setTitle("Accounts Summary");
         primaryStage.setScene(scene);
         primaryStage.show();
-        
-        // help button
-        try {
-            String imageSource = "https://image.flaticon.com/icons/png/128/84/84042.png";
-            
-            Image help = new Image(imageSource);
-            ImageView helpBtn = new ImageView(help);
-            helpBtn.setFitWidth(35);
-            helpBtn.setFitHeight(35);
-            helpBtn.setImage(help);
-            helpBtn.setPreserveRatio(true);
-            helpBtn.setSmooth(true);
-            helpBtn.setCache(true);
-            Button btn = new Button();
-            btn.setMaxHeight(50);
-            btn.setMaxWidth(50);
-            btn.setGraphic(helpBtn);
-            
-            
-            //creates the new stage with modality 
-            btn.setOnAction(new EventHandler<ActionEvent>() {
-            public void handle(ActionEvent event) {
-            	 
-                Label secondLabel = new Label("Hello! Welcome to FordhamBank the number one bank of Fordham students. \nFrom this page you can make transactions, make a withdrawal, or make a depostit.\nYour money is displayed on the right hand side and each account has an in depth account transaction list!");
-     
-                StackPane secondaryLayout = new StackPane();
-                secondaryLayout.getChildren().add(secondLabel);
-     
-                Scene secondScene = new Scene(secondaryLayout, 750, 200);
-     
-                // New window (Stage)
-                Stage helpWindow = new Stage();
-                helpWindow.setTitle("Welcome to FordhamBank!");
-                helpWindow.setScene(secondScene);
-     
-                // Specifies the modality for new window.
-                helpWindow.initModality(Modality.WINDOW_MODAL);
-     
-                //parent window
-                helpWindow.initOwner(primaryStage);
-     
-                // where the second window will be
-                helpWindow.setX(primaryStage.getX() + 25);
-                helpWindow.setY(primaryStage.getY() + 150);
-     
-                helpWindow.show();
-             }
-          });
-            
-            left.getChildren().add(btn);
 
-        } catch(Exception e) {
-            e.printStackTrace();
-        }
+        Button btn = new Button();
+        btn.setMaxHeight(50);
+        btn.setMaxWidth(50);
+        btn.setText("HELP");
+
+        btn.setOnAction(event -> {
+            HelpWindow helpWindow = new HelpWindow(primaryStage);
+
+            helpWindow.show();
+        });
+
+        bankAccountListButtons.getChildren().add(btn);
+
+        bankAccountListContainer.getChildren().add(bankAccountListButtons);
+
         //clock
         
         Text clock = new Text();
@@ -175,17 +125,19 @@ public class Main extends Application {
             while(runTimer) {
                 try {
                     Thread.sleep(1000);
-                } catch (InterruptedException e) {}
-                final String time = hms.format(new Date());
-                Platform.runLater(()-> {
-                	clock.setText(time);
-                });
+                    final String time = hms.format(new Date());
+                    Platform.runLater(() -> {
+                        clock.setText(time);
+                    });
+                } catch(InterruptedException e) { }
             }
-            
         });
+
+        timer.setDaemon(true);
+
         timer.start();
         
-        main.getChildren().add(clock);
+        root.getChildren().add(clock);
     }
 
     
