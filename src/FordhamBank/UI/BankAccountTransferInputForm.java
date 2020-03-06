@@ -60,6 +60,10 @@ public class BankAccountTransferInputForm extends GridPane {
                 resultLabel.setTextFill(Color.RED);
                 resultLabel.setText("ERROR: Please enter an amount.");
                 resultLabel.setWrapText(true);
+            } catch(NullPointerException err) {
+                resultLabel.setTextFill(Color.RED);
+                resultLabel.setText("ERROR: Select an account to transfer to.");
+                resultLabel.setWrapText(true);
             }
         });
 
