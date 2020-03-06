@@ -3,6 +3,7 @@ package FordhamBank.UI;
 import FordhamBank.Aggregates.BankAccount;
 import FordhamBank.Aggregates.User;
 import FordhamBank.Enums.AccountType;
+import FordhamBank.Enums.OperationResult;
 import FordhamBank.Events.BankAccountChangeEvents.TransferEvent;
 import FordhamBank.Events.BankAccountChangeEvents.WithdrawEvent;
 import FordhamBank.Events.IBankAccountChangeEvent;
@@ -22,6 +23,8 @@ public class BankAccountTransferInputForm extends GridPane {
         this.setPadding(new Insets(15, 15, 15, 15));
         this.setVgap(20);
 
+        Label errorLabel = new Label();
+
         Label amountLabel = new Label("Amount: ");
         amountLabel.getStyleClass().add("pr-10");
 
@@ -39,13 +42,19 @@ public class BankAccountTransferInputForm extends GridPane {
         Button submitButton = new Button("Submit");
 
         submitButton.setOnAction(e -> {
-            submitEvent.fireEvent(user, bankAccount,(BankAccount) accountDropDown.getValue(), amountTextField.getText());
+            OperationResult result = submitEvent.fireEvent(user, bankAccount,(BankAccount) accountDropDown.getValue(), amountTextField.getText());
+
+            if (result == OperationResult.FAIL && errorLabel.getText() == "") {
+                errorLabel.setText("ERROR: This transaction puts balance of " + bankAccount.toString() + " below zero.");
+                errorLabel.setWrapText(true);
+                this.add(errorLabel, 0, 5);
+            }
         });
 
         this.add(amountLabel, 0, 0);
-        this.add(amountTextField, 1, 0);
-        this.add(accountLabel, 0, 1);
-        this.add(accountDropDown, 1, 1);
-        this.add(submitButton, 0, 2);
+        this.add(amountTextField, 0, 1);
+        this.add(accountLabel, 0, 2);
+        this.add(accountDropDown, 0, 3);
+        this.add(submitButton, 0, 4);
     }
 }

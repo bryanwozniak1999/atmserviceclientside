@@ -78,21 +78,21 @@ public class BankAccountListItem {
         modal.setTitle("Withdraw");
         BankAccountChangeInputForm content = new BankAccountChangeInputForm(user, bankAccount, new WithdrawEvent());
 
-        initScene(content,  300, 100);
+        initScene(content,  300, 200);
     }
 
     private static void fireTransferButtonClickEvent(User user, BankAccount bankAccount) {
         modal.setTitle("Transfer");
         BankAccountTransferInputForm content = new BankAccountTransferInputForm(user, bankAccount, new TransferEvent());
 
-        initScene(content, 400, 200);
+        initScene(content, 400, 300);
     }
 
     private static void fireDepositButtonClickEvent(User user, BankAccount bankAccount) {
         modal.setTitle("Deposit");
         BankAccountChangeInputForm content = new BankAccountChangeInputForm(user, bankAccount, new DepositEvent());
 
-        initScene(content, 300, 100);
+        initScene(content, 300, 200);
     }
 
     private static void fireHistoryButtonClickEvent(BankAccount bankAccount) {
