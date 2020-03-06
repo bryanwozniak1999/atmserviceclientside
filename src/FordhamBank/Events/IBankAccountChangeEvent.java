@@ -2,18 +2,18 @@ package FordhamBank.Events;
 
 import FordhamBank.Aggregates.BankAccount;
 import FordhamBank.Aggregates.User;
+import FordhamBank.Enums.OperationResult;
+import FordhamBank.Factories.BankAccountListFactory;
 import FordhamBank.Factories.DonutChartFactory;
-import javafx.scene.control.Label;
-import javafx.scene.layout.VBox;
-
-import java.text.DecimalFormat;
 
 public interface IBankAccountChangeEvent {
-    void fireEvent(User user, BankAccount bankAccount, Label balanceLabel, VBox donutChartContainer, String amount);
+    OperationResult fireEvent(User user, BankAccount bankAccount, String amount);
 
-    static void updateBalanceLabelAndChart(User user, BankAccount bankAccount, Label balanceLabel, VBox donutChartContainer) {
-        balanceLabel.setText("$" + new DecimalFormat("#.##").format(bankAccount.GetBalance()));
+    static void updateChart(User user) {
+        DonutChartFactory.CreateAndDisplay(user);
+    }
 
-        DonutChartFactory.CreateAndDisplay(user, donutChartContainer);
+    static void updateBankAccountList(User user) {
+        BankAccountListFactory.CreateAndDisplay(user);
     }
 }

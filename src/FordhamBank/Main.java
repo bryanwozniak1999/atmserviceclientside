@@ -3,6 +3,7 @@ package FordhamBank;
 import FordhamBank.Aggregates.BankAccount;
 import FordhamBank.Aggregates.User;
 import FordhamBank.Enums.AccountType;
+import FordhamBank.Factories.BankAccountListFactory;
 import FordhamBank.UI.AddBankAccountButton;
 import FordhamBank.UI.BankAccountListItem;
 import FordhamBank.UI.DonutChart;
@@ -15,12 +16,12 @@ import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-
 import java.text.DecimalFormat;
 
-// hell
-
 public class Main extends Application {
+    public static VBox bankAccountListContent = new VBox();
+    public static VBox donutChartContainer = new VBox();
+
     @Override
     public void start(Stage primaryStage) {
         //data set up
@@ -45,9 +46,7 @@ public class Main extends Application {
         HBox main = new HBox();
 
 
-        VBox bankAccountListContainer = new VBox(),
-                bankAccountListContent = new VBox(),
-                donutChartContainer = new VBox();
+        VBox bankAccountListContainer = new VBox();
 
         bankAccountListContent.setMinWidth(350);
         bankAccountListContent.setSpacing(10);
@@ -62,13 +61,11 @@ public class Main extends Application {
         Label name = new Label("Hello, " + user.GetFullName());
         root.getChildren().add(name);
         // bank accounts on the left
-        for (BankAccount bankAccount : user.GetBankAccounts()) {
-        	bankAccountListContent.getChildren().add(BankAccountListItem.Create(user, bankAccount, donutChartContainer));
-        }
+        BankAccountListFactory.CreateAndDisplay(user);
         
         bankAccountListContainer.getChildren().add(leftScroll);
 
-        Button add = AddBankAccountButton.Create(user, bankAccountListContent, donutChartContainer);
+        Button add = AddBankAccountButton.Create(user);
 
         bankAccountListContainer.getChildren().add(add);
 

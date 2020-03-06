@@ -12,7 +12,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 
 public class BankAccountChangeInputForm extends GridPane {
-    public BankAccountChangeInputForm(User user, BankAccount bankAccount, Label balanceAmount, VBox donutChartContainer, IBankAccountChangeEvent submitEvent) {
+    public BankAccountChangeInputForm(User user, BankAccount bankAccount, IBankAccountChangeEvent submitEvent) {
         this.setPadding(new Insets(15, 15, 15, 15));
         this.setVgap(20);
 
@@ -23,7 +23,7 @@ public class BankAccountChangeInputForm extends GridPane {
 
         Button submitButton = new Button("Submit");
         submitButton.setOnAction(e -> {
-            submitEvent.fireEvent(user, bankAccount, balanceAmount, donutChartContainer, amountTextField.getText());
+            submitEvent.fireEvent(user, bankAccount, amountTextField.getText());
         });
 
         this.add(amountLabel, 0, 0);

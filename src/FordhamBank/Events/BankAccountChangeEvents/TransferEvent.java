@@ -5,18 +5,19 @@ import FordhamBank.Aggregates.User;
 import FordhamBank.Enums.OperationResult;
 import FordhamBank.Events.IBankAccountChangeEvent;
 
-public class WithdrawEvent implements IBankAccountChangeEvent {
-    @Override
-    public OperationResult fireEvent(User user, BankAccount bankAccount, String amount) {
-        var result = bankAccount.Withdraw(Double.parseDouble(amount));
+public class TransferEvent {
+    public OperationResult fireEvent(User user, BankAccount transferFrom, BankAccount transferTo, String amount) {
+        OperationResult result = new WithdrawEvent().fireEvent(user, transferFrom, amount);
 
         if (result == OperationResult.FAIL) {
             return OperationResult.FAIL;
         }
 
-        IBankAccountChangeEvent.updateChart(user);
-        IBankAccountChangeEvent.updateBankAccountList(user);
+        result = new DepositEvent().fireEvent(user, transferTo, amount);
 
-        return OperationResult.SUCCESS;
+        IBankAccountChangeEvent.updateBankAccountList(user);
+        IBankAccountChangeEvent.updateChart(user);
+
+        return result;
     }
 }

@@ -1,6 +1,7 @@
 package FordhamBank.Aggregates;
 
 import FordhamBank.Enums.AccountType;
+import FordhamBank.Enums.OperationResult;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,6 +13,11 @@ public class BankAccount extends Aggregate {
     private List<Transaction> Transactions;
     private AccountType AccountType;
     private String AccountName;
+
+    @Override
+    public String toString() {
+        return this.AccountName;
+    }
 
     public BankAccount(UUID userId, AccountType accountType, String accountName) {
         super();
@@ -39,16 +45,16 @@ public class BankAccount extends Aggregate {
         return AccountType;
     }
 
-    public void Withdraw(double amount) {
+    public OperationResult Withdraw(double amount) {
         double newBalance = Balance - amount;
 
         if (newBalance <= 0) {
-            //ToDo: remove this sysout
-            System.out.println("Cannot have a negative balance");
-            return;
+            return OperationResult.FAIL;
         }
 
         Balance = newBalance;
+
+        return OperationResult.SUCCESS;
     }
 
     public UUID GetUserId() {

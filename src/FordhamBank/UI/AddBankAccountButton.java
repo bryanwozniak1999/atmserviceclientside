@@ -3,7 +3,9 @@ package FordhamBank.UI;
 import FordhamBank.Aggregates.BankAccount;
 import FordhamBank.Aggregates.User;
 import FordhamBank.Enums.AccountType;
+import FordhamBank.Factories.BankAccountListFactory;
 import FordhamBank.Factories.DonutChartFactory;
+import FordhamBank.Main;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
@@ -20,17 +22,17 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 public class AddBankAccountButton {
-    public static Button Create(User user, VBox bankAccountListContent, VBox donutChartContainer) {
+    public static Button Create(User user) {
         Button add = new Button("Add Account");
         add.setOnAction(e -> {
-            fireAddAccountButtonClickEvent(user, bankAccountListContent, donutChartContainer);
+            fireAddAccountButtonClickEvent(user);
         });
         add.getStyleClass().add("button");
 
         return add;
     }
 
-    private static void fireAddAccountButtonClickEvent(User user, VBox bankAccountListContent, VBox donutChartContainer) {
+    private static void fireAddAccountButtonClickEvent(User user) {
         Stage modal = new Stage();
         modal.initModality(Modality.APPLICATION_MODAL);
         modal.setTitle("Add Account");
@@ -59,7 +61,7 @@ public class AddBankAccountButton {
         Button submitButton = new Button("Submit");
         submitButton.setOnAction(e -> {
             String accountType = (String) accountTypeDropdown.getValue();
-            addAccount(user, bankAccountListContent, donutChartContainer, accountNameTextField.getText(), AccountType.valueOf(accountType));
+            addAccount(user, accountNameTextField.getText(), AccountType.valueOf(accountType));
         });
 
         content.add(accountNameLabel, 0, 0);
@@ -74,17 +76,17 @@ public class AddBankAccountButton {
     }
 
     private static void initScene(Pane pane, Stage modal) {
-        Scene scene = new Scene(pane, 500, 400);
+        Scene scene = new Scene(pane, 300, 200);
         modal.setScene(scene);
         modal.show();
     }
 
-    private static void addAccount(User user, VBox bankAccountListContent, VBox donutChartContainer, String accountName, AccountType accountType) {
+    private static void addAccount(User user, String accountName, AccountType accountType) {
         BankAccount newAccount = new BankAccount(user.GetId(), accountType, accountName);
 
         user.AddBankAccount(newAccount);
-        bankAccountListContent.getChildren().add(BankAccountListItem.Create(user, newAccount, donutChartContainer));
 
-        DonutChartFactory.CreateAndDisplay(user, donutChartContainer);
+        BankAccountListFactory.CreateAndDisplay(user);
+        DonutChartFactory.CreateAndDisplay(user);
     }
 }

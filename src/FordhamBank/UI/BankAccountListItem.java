@@ -3,6 +3,7 @@ package FordhamBank.UI;
 import FordhamBank.Aggregates.BankAccount;
 import FordhamBank.Aggregates.User;
 import FordhamBank.Events.BankAccountChangeEvents.DepositEvent;
+import FordhamBank.Events.BankAccountChangeEvents.TransferEvent;
 import FordhamBank.Events.BankAccountChangeEvents.WithdrawEvent;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
@@ -18,9 +19,11 @@ import javafx.stage.Stage;
 
 import java.text.DecimalFormat;
 
+import static FordhamBank.Main.donutChartContainer;
+
 public class BankAccountListItem {
 
-    public static VBox Create(User user, BankAccount bankAccount, VBox donutChartContainer) {
+    public static VBox Create(User user, BankAccount bankAccount) {
         modal = new Stage();
         modal.initModality(Modality.APPLICATION_MODAL);
 
@@ -48,17 +51,17 @@ public class BankAccountListItem {
         Button withdraw = new Button("Withdraw");
         withdraw.getStyleClass().add("button");
         withdraw.setOnAction(e -> {
-            fireWithdrawButtonClickEvent(user, bankAccount, balanceAmount, donutChartContainer);
+            fireWithdrawButtonClickEvent(user, bankAccount);
         });
         Button deposit = new Button("Deposit");
         deposit.getStyleClass().add("button");
         deposit.setOnAction(e -> {
-            fireDepositButtonClickEvent(user, bankAccount, balanceAmount, donutChartContainer);
+            fireDepositButtonClickEvent(user, bankAccount);
         });
         Button transfer = new Button("Transfer");
         transfer.getStyleClass().add("button");
         transfer.setOnAction(e -> {
-            fireTransferButtonClickEvent();
+            fireTransferButtonClickEvent(user, bankAccount);
         });
         Button history = new Button("History");
         history.getStyleClass().add("button");
@@ -75,21 +78,23 @@ public class BankAccountListItem {
 
     private static Stage modal;
 
-    private static void fireWithdrawButtonClickEvent(User user, BankAccount bankAccount, Label balanceAmount, VBox donutChartContainer) {
+    private static void fireWithdrawButtonClickEvent(User user, BankAccount bankAccount) {
         modal.setTitle("Withdraw");
-        BankAccountChangeInputForm content = new BankAccountChangeInputForm(user, bankAccount, balanceAmount, donutChartContainer, new WithdrawEvent());
+        BankAccountChangeInputForm content = new BankAccountChangeInputForm(user, bankAccount, new WithdrawEvent());
 
         initScene(content,  300, 100);
     }
 
-    private static void fireTransferButtonClickEvent() {
+    private static void fireTransferButtonClickEvent(User user, BankAccount bankAccount) {
         modal.setTitle("Transfer");
-        modal.show();
+        BankAccountTransferInputForm content = new BankAccountTransferInputForm(user, bankAccount, new TransferEvent());
+
+        initScene(content, 400, 200);
     }
 
-    private static void fireDepositButtonClickEvent(User user, BankAccount bankAccount, Label balanceAmount, VBox donutChartContainer) {
+    private static void fireDepositButtonClickEvent(User user, BankAccount bankAccount) {
         modal.setTitle("Deposit");
-        BankAccountChangeInputForm content = new BankAccountChangeInputForm(user, bankAccount, balanceAmount, donutChartContainer, new DepositEvent());
+        BankAccountChangeInputForm content = new BankAccountChangeInputForm(user, bankAccount, new DepositEvent());
 
         initScene(content, 300, 100);
     }
