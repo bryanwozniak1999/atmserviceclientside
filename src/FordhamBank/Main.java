@@ -13,15 +13,34 @@ import FordhamBank.UI.BankAccountListItem;
 import FordhamBank.UI.DonutChart;
 
 import javafx.application.Application;
+
+import javafx.application.Platform;
+import javafx.collections.FXCollections;
+
+
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.chart.PieChart;
+
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+
 import javafx.scene.control.*;
+
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
+import java.text.SimpleDateFormat;
 
 import java.util.Date;
 import java.util.stream.Collectors;
@@ -92,6 +111,81 @@ public class Main extends Application {
         primaryStage.setTitle("Accounts Summary");
         primaryStage.setScene(scene);
         primaryStage.show();
+        
+        // help button
+        try {
+            String imageSource = "https://image.flaticon.com/icons/png/128/84/84042.png";
+            
+            Image help = new Image(imageSource);
+            ImageView helpBtn = new ImageView(help);
+            helpBtn.setFitWidth(35);
+            helpBtn.setFitHeight(35);
+            helpBtn.setImage(help);
+            helpBtn.setPreserveRatio(true);
+            helpBtn.setSmooth(true);
+            helpBtn.setCache(true);
+            Button btn = new Button();
+            btn.setMaxHeight(50);
+            btn.setMaxWidth(50);
+            btn.setGraphic(helpBtn);
+            
+            
+            //creates the new stage with modality 
+            btn.setOnAction(new EventHandler<ActionEvent>() {
+            public void handle(ActionEvent event) {
+            	 
+                Label secondLabel = new Label("Hello! Welcome to FordhamBank the number one bank of Fordham students. \nFrom this page you can make transactions, make a withdrawal, or make a depostit.\nYour money is displayed on the right hand side and each account has an in depth account transaction list!");
+     
+                StackPane secondaryLayout = new StackPane();
+                secondaryLayout.getChildren().add(secondLabel);
+     
+                Scene secondScene = new Scene(secondaryLayout, 750, 200);
+     
+                // New window (Stage)
+                Stage helpWindow = new Stage();
+                helpWindow.setTitle("Welcome to FordhamBank!");
+                helpWindow.setScene(secondScene);
+     
+                // Specifies the modality for new window.
+                helpWindow.initModality(Modality.WINDOW_MODAL);
+     
+                //parent window
+                helpWindow.initOwner(primaryStage);
+     
+                // where the second window will be
+                helpWindow.setX(primaryStage.getX() + 25);
+                helpWindow.setY(primaryStage.getY() + 150);
+     
+                helpWindow.show();
+             }
+          });
+            
+            left.getChildren().add(btn);
+
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+        //clock
+        
+        Text clock = new Text();
+    	boolean runTimer = true;
+
+        Thread timer = new Thread(() -> {
+            SimpleDateFormat hms = new SimpleDateFormat("hh:mm:ss");
+            while(runTimer) {
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {}
+                final String time = hms.format(new Date());
+                Platform.runLater(()-> {
+                	clock.setText(time);
+                });
+            }
+            
+        });
+        timer.start();
+        
+        main.getChildren().add(clock);
     }
 
     
@@ -109,6 +203,7 @@ public class Main extends Application {
         user.AddBankAccount(account2);
         user.AddBankAccount(account3);
     }
+    
     
     public static void main(String[] args) {
         launch(args);
