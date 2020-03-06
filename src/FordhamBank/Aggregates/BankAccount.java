@@ -1,8 +1,11 @@
 package FordhamBank.Aggregates;
 
 import FordhamBank.Enums.AccountType;
+import FordhamBank.Enums.OperationResult;
+import FordhamBank.Enums.TransactionType;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -12,6 +15,11 @@ public class BankAccount extends Aggregate {
     private List<Transaction> Transactions;
     private AccountType AccountType;
     private String AccountName;
+
+    @Override
+    public String toString() {
+        return this.AccountName;
+    }
 
     public BankAccount(UUID userId, AccountType accountType, String accountName) {
         super();
@@ -28,27 +36,40 @@ public class BankAccount extends Aggregate {
     }
 
     public double GetBalance() {
+        Balance = Math.floor(Balance * 100) / 100;
         return Balance;
     }
 
     public void Deposit(double amount) {
+        amount = Math.floor(amount * 100) / 100;
+
         Balance += amount;
+
+        Balance = Math.floor(Balance * 100) / 100;
+
+        AddTransaction(new Transaction(new Date(), amount, Balance, TransactionType.DEPOSIT));
     }
 
     public AccountType GetAccountType() {
         return AccountType;
     }
 
-    public void Withdraw(double amount) {
+    public OperationResult Withdraw(double amount) {
+        amount = Math.floor(amount * 100) / 100;
+
         double newBalance = Balance - amount;
 
         if (newBalance <= 0) {
-            //ToDo: remove this sysout
-            System.out.println("Cannot have a negative balance");
-            return;
+            return OperationResult.FAIL;
         }
 
         Balance = newBalance;
+
+        Balance = Math.floor(Balance * 100) / 100;
+
+        AddTransaction(new Transaction(new Date(), amount, Balance, TransactionType.WITHDRAWAL));
+
+        return OperationResult.SUCCESS;
     }
 
     public UUID GetUserId() {
@@ -59,7 +80,7 @@ public class BankAccount extends Aggregate {
         return Transactions;
     }
 
-    public void AddTransaction(Transaction transaction) {
+    private void AddTransaction(Transaction transaction) {
         Transactions.add(transaction);
     }
 }
