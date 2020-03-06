@@ -6,6 +6,7 @@ import FordhamBank.Enums.AccountType;
 import FordhamBank.Factories.BankAccountListFactory;
 import FordhamBank.Factories.DonutChartFactory;
 import FordhamBank.Main;
+import FordhamBank.fileIO;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
@@ -85,6 +86,9 @@ public class AddBankAccountButton {
         BankAccount newAccount = new BankAccount(user.GetId(), accountType, accountName);
 
         user.AddBankAccount(newAccount);
+        
+        fileIO FileW = new fileIO();
+        FileW.wrTransactionData(user.GetFullName() + " has created a new account called " + newAccount.GetAccountName());
 
         BankAccountListFactory.CreateAndDisplay(user);
         DonutChartFactory.CreateAndDisplay(user);
