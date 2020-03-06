@@ -16,6 +16,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.util.StringConverter;
 
 public class BankAccountTransferInputForm extends GridPane {
@@ -47,12 +48,15 @@ public class BankAccountTransferInputForm extends GridPane {
                 BankAccount selectedBankAccount = (BankAccount) accountDropDown.getValue();
 
                 if (result == OperationResult.FAIL) {
+                    resultLabel.setTextFill(Color.RED);
                     resultLabel.setText("ERROR: This transaction puts balance of " + bankAccount.toString() + " below zero.");
                     resultLabel.setWrapText(true);
                 } else {
+                    resultLabel.setTextFill(Color.LIGHTGREEN);
                     resultLabel.setText("SUCCESS! " + bankAccount.GetAccountName() + " Balance: $" + bankAccount.GetBalance() + "\n\t" + selectedBankAccount.GetAccountName() + " Balance: $" + selectedBankAccount.GetBalance());
                 }
             } catch(NumberFormatException err) {
+                resultLabel.setTextFill(Color.RED);
                 resultLabel.setText("ERROR: Please enter an amount.");
                 resultLabel.setWrapText(true);
             }
