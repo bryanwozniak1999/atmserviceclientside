@@ -23,7 +23,7 @@ public class BankAccountTransferInputForm extends GridPane {
         this.setPadding(new Insets(15, 15, 15, 15));
         this.setVgap(20);
 
-        Label errorLabel = new Label();
+        Label resultLabel = new Label();
 
         Label amountLabel = new Label("Amount: ");
         amountLabel.getStyleClass().add("pr-10");
@@ -44,16 +44,17 @@ public class BankAccountTransferInputForm extends GridPane {
         submitButton.setOnAction(e -> {
             try {
                 OperationResult result = submitEvent.fireEvent(user, bankAccount,(BankAccount) accountDropDown.getValue(), amountTextField.getText());
+                BankAccount selectedBankAccount = (BankAccount) accountDropDown.getValue();
 
                 if (result == OperationResult.FAIL) {
-                    errorLabel.setText("ERROR: This transaction puts balance of " + bankAccount.toString() + " below zero.");
-                    errorLabel.setWrapText(true);
+                    resultLabel.setText("ERROR: This transaction puts balance of " + bankAccount.toString() + " below zero.");
+                    resultLabel.setWrapText(true);
                 } else {
-                    errorLabel.setText("");
+                    resultLabel.setText("SUCCESS! " + bankAccount.GetAccountName() + " Balance: $" + bankAccount.GetBalance() + "\n\t" + selectedBankAccount.GetAccountName() + " Balance: $" + selectedBankAccount.GetBalance());
                 }
             } catch(NumberFormatException err) {
-                errorLabel.setText("ERROR: Please enter an amount.");
-                errorLabel.setWrapText(true);
+                resultLabel.setText("ERROR: Please enter an amount.");
+                resultLabel.setWrapText(true);
             }
         });
 
@@ -62,6 +63,6 @@ public class BankAccountTransferInputForm extends GridPane {
         this.add(accountLabel, 0, 2);
         this.add(accountDropDown, 0, 3);
         this.add(submitButton, 0, 4);
-        this.add(errorLabel, 0, 5);
+        this.add(resultLabel, 0, 5);
     }
 }
