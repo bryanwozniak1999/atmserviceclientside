@@ -1,5 +1,7 @@
-package FordhamBank;
+package FordhamBank.UI;
 
+import FordhamBank.Aggregates.User;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Bounds;
 import javafx.scene.Node;
@@ -7,6 +9,8 @@ import javafx.scene.chart.PieChart;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+
+import java.util.stream.Collectors;
 
 
 public class DonutChart extends PieChart {
@@ -19,6 +23,12 @@ public class DonutChart extends PieChart {
         innerCircle.setFill(Color.WHITESMOKE);
         innerCircle.setStroke(Color.WHITE);
         innerCircle.setStrokeWidth(3);
+    }
+
+    public static ObservableList<PieChart.Data> createData(User user) {
+        return FXCollections.observableArrayList(user.GetBankAccounts().stream().map(bankAccount -> {
+            return new PieChart.Data(bankAccount.GetAccountName(), bankAccount.GetBalance());
+        }).collect(Collectors.toList()));
     }
 
     @Override
