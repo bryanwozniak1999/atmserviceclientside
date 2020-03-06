@@ -4,6 +4,4 @@ public enum TransactionType {
 	DEPOSIT,
 	WITHDRAWAL,
 	TRANSFER,
-	CHARGE,
-	ONLINE
 }

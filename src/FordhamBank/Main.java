@@ -1,8 +1,10 @@
 package FordhamBank;
 
 import FordhamBank.Aggregates.BankAccount;
+import FordhamBank.Aggregates.Transaction;
 import FordhamBank.Aggregates.User;
 import FordhamBank.Enums.AccountType;
+import FordhamBank.Enums.TransactionType;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -17,6 +19,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
+import java.util.Date;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -88,10 +91,24 @@ public class Main extends Application {
     private void setAccounts(User user) {
     	BankAccount account1 = new BankAccount(user.GetId(), AccountType.CHECKING, "My Checking");
         account1.Deposit(35300.33);
+        	
+        account1.AddTransaction(new Transaction(new Date(), "ATM 1", -200, 35100.33, TransactionType.WITHDRAWAL));
+        account1.AddTransaction(new Transaction(new Date(), "Work", 500, 35600.00, TransactionType.DEPOSIT));
+        account1.AddTransaction(new Transaction(new Date(), "ATM 2", -600, 35000.00, TransactionType.WITHDRAWAL));
+        
         BankAccount account2 = new BankAccount(user.GetId(), AccountType.CD, "My CD");
         account2.Deposit(39000);
+        
+        account2.AddTransaction(new Transaction(new Date(), "Deposit A", 1000, 40000.00, TransactionType.DEPOSIT));
+        account2.AddTransaction(new Transaction(new Date(), "Work", 500, 45000.00, TransactionType.DEPOSIT));
+        account2.AddTransaction(new Transaction(new Date(), "To Account 3", -600, 44400.00, TransactionType.TRANSFER));
+        
         BankAccount account3 = new BankAccount(user.GetId(), AccountType.SAVINGS, "College Savings");
         account3.Deposit(11023);
+        
+        account3.AddTransaction(new Transaction(new Date(), "Received Transfer", 600, 11623, TransactionType.TRANSFER));
+        account3.AddTransaction(new Transaction(new Date(), "Refund", 1200, 12823, TransactionType.DEPOSIT));
+        account3.AddTransaction(new Transaction(new Date(), "ATM Withdrawal", -50, 12773, TransactionType.WITHDRAWAL));
 
         user.AddBankAccount(account1);
         user.AddBankAccount(account2);

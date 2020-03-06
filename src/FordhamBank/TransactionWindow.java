@@ -50,14 +50,10 @@ public class TransactionWindow {
 		TableView<Transaction> table = new TableView<>();
 		table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 		
-		// data (for now it is generated manually).
-		ObservableList<Transaction> data = FXCollections.observableArrayList(
-			new Transaction(new Date(), "Test", 500, 3000.00, TransactionType.DEPOSIT),
-			new Transaction(new Date(), "Amazon", -200, 2800.00, TransactionType.WITHDRAWAL)
-		);
-		
 		// the following line is used to create an observableArrayList from the account list of transactions
-		// ObservableList<Transaction> data = FXCollections.observableArrayList(account.GetTransactions());
+		// this line can be removed if the transaction list variable in bank account is converted to ObservableList.
+		// would only have to call table.setItems(account.GetTransactions);
+		ObservableList<Transaction> data = FXCollections.observableArrayList(account.GetTransactions());
 		
 		
 		TableColumn<Transaction, Date> date = new TableColumn<>("Date");
