@@ -30,6 +30,7 @@ public class BankAccountTransferInputForm extends GridPane {
         Label accountLabel = new Label("Transfer To: ");
 
         ObservableList<BankAccount> options = FXCollections.observableArrayList(user.GetBankAccounts());
+        options.remove(bankAccount);
 
         ComboBox accountDropDown = new ComboBox();
 
