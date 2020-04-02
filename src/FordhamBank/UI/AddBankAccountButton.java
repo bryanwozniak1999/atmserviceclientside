@@ -102,14 +102,14 @@ public class AddBankAccountButton {
         socketUtils su = new socketUtils();
 
         if (su.socketConnect() == true) {
-            String msg = "Transaction>kiosk#101" + "," + 55 + "," + 5;
-
-            su.sendMessage(msg);
-            su.closeSocket();
-
             BankAccount newAccount = new BankAccount(user.GetId(), accountType, accountName);
 
             user.AddBankAccount(newAccount);
+
+            String msg = "NewBankAccount>" + accountName + "," + accountType.toString() + "," + newAccount.GetId();
+
+            su.sendMessage(msg);
+            su.closeSocket();
 
             fileIO FileW = new fileIO();
             FileW.wrTransactionData(user.GetFullName() + " has created a new account called " + newAccount.GetAccountName());
