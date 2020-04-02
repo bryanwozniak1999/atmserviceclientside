@@ -25,7 +25,7 @@ public class BankAccount extends Aggregate {
         return this.AccountName;
     }
 
-    public BankAccount(UUID userId, AccountType accountType, String accountName) {
+    public BankAccount(UUID userId, String accountName, AccountType accountType) {
         super();
 
         AccountType = accountType;

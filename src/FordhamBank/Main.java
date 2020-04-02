@@ -5,12 +5,14 @@ import FordhamBank.Aggregates.User;
 import FordhamBank.Enums.AccountType;
 import FordhamBank.Factories.BankAccountListFactory;
 import FordhamBank.Factories.DonutChartFactory;
+import FordhamBank.ServerUtils.socketUtils;
 import FordhamBank.UI.AddBankAccountButton;
 import FordhamBank.UI.HelpWindow;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
@@ -21,6 +23,7 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.UUID;
 
 public class Main extends Application {
     public static VBox bankAccountListContent = new VBox();
@@ -131,18 +134,25 @@ public class Main extends Application {
 
     
     private void setAccounts(User user) {
-    	BankAccount account1 = new BankAccount(user.GetId(), AccountType.CHECKING, "My Checking");
-        account1.Deposit(35300.33);
-        
-        BankAccount account2 = new BankAccount(user.GetId(), AccountType.CD, "My CD");
-        account2.Deposit(39000);
-        
-        BankAccount account3 = new BankAccount(user.GetId(), AccountType.SAVINGS, "College Savings");
-        account3.Deposit(11023);
+        socketUtils su = new socketUtils();
 
-        user.AddBankAccount(account1);
-        user.AddBankAccount(account2);
-        user.AddBankAccount(account3);
+        // if you can connect get the accounts from the file
+        if (su.socketConnect() == true) {
+            su.sendMessage("BankAccountsQuery>");
+            String accountsAsString = su.recvMessage();
+            String accountsAsList[] = accountsAsString.split("\\>");
+
+            for (var account: accountsAsList) {
+                String args[] = account.split(",");
+                user.AddBankAccount(new BankAccount(user.GetId(), args[0], AccountType.valueOf(args[1])));
+            }
+        } else { // get nothin
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("--- Network Communications Error ---");
+            alert.setHeaderText("Unable to talk to Socket Server!");
+
+            alert.showAndWait();
+        }
     }
     
     

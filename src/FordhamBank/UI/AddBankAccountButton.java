@@ -102,7 +102,7 @@ public class AddBankAccountButton {
         socketUtils su = new socketUtils();
 
         if (su.socketConnect() == true) {
-            BankAccount newAccount = new BankAccount(user.GetId(), accountType, accountName);
+            BankAccount newAccount = new BankAccount(user.GetId(), accountName, accountType);
 
             user.AddBankAccount(newAccount);
 
