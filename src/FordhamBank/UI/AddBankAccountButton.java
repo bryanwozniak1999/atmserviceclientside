@@ -7,16 +7,15 @@ import FordhamBank.Enums.OperationResult;
 import FordhamBank.Factories.BankAccountListFactory;
 import FordhamBank.Factories.DonutChartFactory;
 import FordhamBank.Main;
+import FordhamBank.ServerUtils.socketUtils;
 import FordhamBank.fileIO;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.chart.PieChart;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
@@ -65,18 +64,19 @@ public class AddBankAccountButton {
 
         Button submitButton = new Button("Submit");
         submitButton.setOnAction(e -> {
-            try {
-                String accountType = (String) accountTypeDropdown.getValue();
-                addAccount(user, accountNameTextField.getText(), AccountType.valueOf(accountType));
-
-                resultLabel.setTextFill(Color.LIGHTGREEN);
-                resultLabel.setText("Success!");
-                resultLabel.setWrapText(true);
-            } catch(NullPointerException err) {
-                resultLabel.setTextFill(Color.RED);
-                resultLabel.setText("ERROR: Please enter all fields.");
-                resultLabel.setWrapText(true);
-            }
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        String accountType = (String) accountTypeDropdown.getValue();
+                        addAccount(user, accountNameTextField.getText(), AccountType.valueOf(accountType), resultLabel);
+                    } catch(NullPointerException err) {
+                        resultLabel.setTextFill(Color.RED);
+                        resultLabel.setText("ERROR: Please enter all fields.");
+                        resultLabel.setWrapText(true);
+                    }
+                }
+            });
         });
 
         content.add(accountNameLabel, 0, 0);
@@ -98,15 +98,39 @@ public class AddBankAccountButton {
         modal.show();
     }
 
-    private static void addAccount(User user, String accountName, AccountType accountType) {
-        BankAccount newAccount = new BankAccount(user.GetId(), accountType, accountName);
+    private static void addAccount(User user, String accountName, AccountType accountType, Label resultLabel) {
+        socketUtils su = new socketUtils();
 
-        user.AddBankAccount(newAccount);
-        
-        fileIO FileW = new fileIO();
-        FileW.wrTransactionData(user.GetFullName() + " has created a new account called " + newAccount.GetAccountName());
+        if (su.socketConnect() == true) {
+            BankAccount newAccount = new BankAccount(user.GetId(), accountType, accountName);
 
-        BankAccountListFactory.CreateAndDisplay(user);
-        DonutChartFactory.CreateAndDisplay(user);
+            user.AddBankAccount(newAccount);
+
+            String msg = "NewBankAccount>" + accountName + "," + accountType.toString() + "," + newAccount.GetId();
+
+            su.sendMessage(msg);
+            su.closeSocket();
+
+            fileIO FileW = new fileIO();
+            FileW.wrTransactionData(user.GetFullName() + " has created a new account called " + newAccount.GetAccountName());
+
+            BankAccountListFactory.CreateAndDisplay(user);
+            DonutChartFactory.CreateAndDisplay(user);
+
+
+            resultLabel.setTextFill(Color.LIGHTGREEN);
+            resultLabel.setText("Success!");
+            resultLabel.setWrapText(true);
+        } else {
+            resultLabel.setTextFill(Color.RED);
+            resultLabel.setText("Error: Unable to Connect!");
+            resultLabel.setWrapText(true);
+
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("--- Network Communications Error ---");
+            alert.setHeaderText("Unable to talk to Socket Server!");
+
+            alert.showAndWait();
+        }
     }
 }
