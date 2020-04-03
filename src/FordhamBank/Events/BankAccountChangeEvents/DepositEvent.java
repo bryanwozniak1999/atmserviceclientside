@@ -15,10 +15,11 @@ public class DepositEvent implements IBankAccountChangeEvent {
     	if (Main.connected == true) {
 	        bankAccount.Deposit(Double.parseDouble(amount));
 	        
-	        String msg = "Deposit>" + bankAccount.GetAccountName() + "," + amount;
+	        String msg = "Deposit>" + bankAccount.GetAccountName() + "," + amount + "," + bankAccount.GetId();
 	        
 	        Main.su.sendMessage(msg);
-	        Main.su.closeSocket();
+	        
+	        // calling closeSocket() 
 	
 	        IBankAccountChangeEvent.updateBankAccountList(user);
 	        IBankAccountChangeEvent.updateChart(user);

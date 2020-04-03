@@ -110,7 +110,8 @@ public class AddBankAccountButton {
             String msg = "NewBankAccount>" + accountName + "," + accountType.toString() + "," + newAccount.GetId();
 
             su.sendMessage(msg);
-            su.closeSocket();
+            // calling closeSocket() prevents future transactions sent to server
+            // su.closeSocket();
 
             fileIO FileW = new fileIO();
             FileW.wrTransactionData(user.GetFullName() + " has created a new account called " + newAccount.GetAccountName());
