@@ -4,6 +4,7 @@ import FordhamBank.Aggregates.BankAccount;
 import FordhamBank.Aggregates.User;
 import FordhamBank.Enums.OperationResult;
 import FordhamBank.Events.IBankAccountChangeEvent;
+import FordhamBank.Main;
 
 public class WithdrawEvent implements IBankAccountChangeEvent {
     @Override
@@ -13,7 +14,8 @@ public class WithdrawEvent implements IBankAccountChangeEvent {
         if (result == OperationResult.FAIL) {
             return OperationResult.FAIL;
         }
-
+    
+        Main.su.sendMessage("Withdraw>" + bankAccount.GetId() + "," + amount);
         IBankAccountChangeEvent.updateChart(user);
         IBankAccountChangeEvent.updateBankAccountList(user);
 
