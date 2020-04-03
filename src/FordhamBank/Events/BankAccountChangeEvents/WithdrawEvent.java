@@ -15,7 +15,7 @@ public class WithdrawEvent implements IBankAccountChangeEvent {
             return OperationResult.FAIL;
         }
     
-        Main.su.sendMessage("Withdraw>" + bankAccount.GetId() + "," + amount);
+        Main.su.sendMessage("Withdraw>" + bankAccount.GetAccountName() + "," + amount + "," + bankAccount.GetId());
         IBankAccountChangeEvent.updateChart(user);
         IBankAccountChangeEvent.updateBankAccountList(user);
 
