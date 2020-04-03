@@ -23,6 +23,8 @@ import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
+import static FordhamBank.Main.su;
+
 public class AddBankAccountButton {
     public static Button Create(User user) {
         Button add = new Button("Add Account");
@@ -71,6 +73,7 @@ public class AddBankAccountButton {
                         String accountType = (String) accountTypeDropdown.getValue();
                         addAccount(user, accountNameTextField.getText(), AccountType.valueOf(accountType), resultLabel);
                     } catch(NullPointerException err) {
+                        err.printStackTrace();
                         resultLabel.setTextFill(Color.RED);
                         resultLabel.setText("ERROR: Please enter all fields.");
                         resultLabel.setWrapText(true);
@@ -99,9 +102,7 @@ public class AddBankAccountButton {
     }
 
     private static void addAccount(User user, String accountName, AccountType accountType, Label resultLabel) {
-        socketUtils su = new socketUtils();
-
-        if (su.socketConnect() == true) {
+        if (Main.connected == true) {
             BankAccount newAccount = new BankAccount(user.GetId(), accountName, accountType);
 
             user.AddBankAccount(newAccount);

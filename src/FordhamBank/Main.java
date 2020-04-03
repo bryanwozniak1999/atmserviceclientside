@@ -28,9 +28,13 @@ import java.util.UUID;
 public class Main extends Application {
     public static VBox bankAccountListContent = new VBox();
     public static VBox donutChartContainer = new VBox();
+    public static boolean connected = false;
+    public static socketUtils su = new socketUtils();
 
     @Override
     public void start(Stage primaryStage) {
+        connected = su.socketConnect();
+
         //data set up
         User user = new User("John", "Doe");
         setAccounts(user);
@@ -134,10 +138,9 @@ public class Main extends Application {
 
     
     private void setAccounts(User user) {
-        socketUtils su = new socketUtils();
 
         // if you can connect get the accounts from the file
-        if (su.socketConnect() == true) {
+        if (connected) {
             su.sendMessage("BankAccountsQuery>");
             String accountsAsString = su.recvMessage();
             String accountsAsList[] = accountsAsString.split("\\>");
