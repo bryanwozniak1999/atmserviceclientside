@@ -18,8 +18,6 @@ public class DepositEvent implements IBankAccountChangeEvent {
 	        String msg = "Deposit>" + bankAccount.GetAccountName() + "," + amount + "," + bankAccount.GetId();
 	        
 	        Main.su.sendMessage(msg);
-	        
-	        // calling closeSocket() 
 	
 	        IBankAccountChangeEvent.updateBankAccountList(user);
 	        IBankAccountChangeEvent.updateChart(user);
