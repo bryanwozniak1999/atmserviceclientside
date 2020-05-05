@@ -109,7 +109,7 @@ public class BankAccount extends Aggregate {
         return Transactions;
     }
 
-    private void AddTransaction(Transaction transaction) {
+    public void AddTransaction(Transaction transaction) {
         Transactions.add(transaction);
     }
 }

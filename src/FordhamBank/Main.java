@@ -1,8 +1,10 @@
 package FordhamBank;
 
 import FordhamBank.Aggregates.BankAccount;
+import FordhamBank.Aggregates.Transaction;
 import FordhamBank.Aggregates.User;
 import FordhamBank.Enums.AccountType;
+import FordhamBank.Enums.TransactionType;
 import FordhamBank.Factories.BankAccountListFactory;
 import FordhamBank.Factories.DonutChartFactory;
 import FordhamBank.ServerUtils.socketUtils;
@@ -148,8 +150,25 @@ public class Main extends Application {
             // if theres a NACK we know there are no bank accounts in the DB
             if (!accountsAsString.contains("NACK")) {
                 for (var account: accountsAsList) {
-                    String args[] = account.split(",");
-                    user.AddBankAccount(new BankAccount(user.GetId(), args[0], AccountType.valueOf(args[1]), Double.parseDouble(args[2]),UUID.fromString(args[3])));
+                    String bankAccountArgs[] = account.split(",");
+
+                    BankAccount accountObject = new BankAccount(user.GetId(), bankAccountArgs[0], AccountType.valueOf(bankAccountArgs[1]), Double.parseDouble(bankAccountArgs[2]),UUID.fromString(bankAccountArgs[3]));
+                    su.sendMessage("TransactionsQuery>" + bankAccountArgs[3]);
+
+                    String transactionsAsString = su.recvMessage();
+                    String transactionsAsList[] = transactionsAsString.split("\\>");
+
+                    if (!transactionsAsString.contains("NACK")) {
+                        for (var transaction : transactionsAsList) {
+                            String transactionArgs[] = transaction.split(",");
+
+                            Transaction transactionObject = new Transaction(new Date(), Double.parseDouble(transactionArgs[2]), 0.0, TransactionType.valueOf(transactionArgs[0]));
+
+                            accountObject.AddTransaction(transactionObject);
+                        }
+                    }
+
+                    user.AddBankAccount(accountObject);
                 }
             }
         } else { // get nothin
