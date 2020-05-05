@@ -107,7 +107,7 @@ public class AddBankAccountButton {
 
             user.AddBankAccount(newAccount);
 
-            String msg = "NewBankAccount>" + accountName + "," + accountType.toString() + "," + newAccount.GetId();
+            String msg = "NewBankAccount>" + accountName + "," + accountType.toString() + "," + newAccount.GetBalance() + "," + newAccount.GetId();
 
             su.sendMessage(msg);
 

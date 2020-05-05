@@ -145,9 +145,12 @@ public class Main extends Application {
             String accountsAsString = su.recvMessage();
             String accountsAsList[] = accountsAsString.split("\\>");
 
-            for (var account: accountsAsList) {
-                String args[] = account.split(",");
-                user.AddBankAccount(new BankAccount(user.GetId(), args[0], AccountType.valueOf(args[1]), UUID.fromString(args[2])));
+            // if theres a NACK we know there are no bank accounts in the DB
+            if (!accountsAsString.contains("NACK")) {
+                for (var account: accountsAsList) {
+                    String args[] = account.split(",");
+                    user.AddBankAccount(new BankAccount(user.GetId(), args[0], AccountType.valueOf(args[1]), UUID.fromString(args[3])));
+                }
             }
         } else { // get nothin
             Alert alert = new Alert(Alert.AlertType.ERROR);
