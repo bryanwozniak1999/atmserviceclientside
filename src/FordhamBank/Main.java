@@ -27,6 +27,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Paint;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -149,6 +150,7 @@ public class Main extends Application {
     
     private User selectUser() {
     	Stage window = new Stage();
+    	//window.initStyle(StageStyle.UTILITY);
     	VBox container = new VBox();
     	container.getStylesheets().add("/FordhamBank/Styles/styles.css");
     	container.setSpacing(10);

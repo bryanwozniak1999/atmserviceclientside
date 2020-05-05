@@ -32,6 +32,7 @@ public class AddBankAccountButton {
             fireAddAccountButtonClickEvent(user);
         });
         add.getStyleClass().add("button");
+        add.setTooltip(new Tooltip("Create a new bank account"));
 
         return add;
     }
