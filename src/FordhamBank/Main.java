@@ -147,7 +147,7 @@ public class Main extends Application {
 
             for (var account: accountsAsList) {
                 String args[] = account.split(",");
-                user.AddBankAccount(new BankAccount(user.GetId(), args[0], AccountType.valueOf(args[1])));
+                user.AddBankAccount(new BankAccount(user.GetId(), args[0], AccountType.valueOf(args[1]), UUID.fromString(args[2])));
             }
         } else { // get nothin
             Alert alert = new Alert(Alert.AlertType.ERROR);
