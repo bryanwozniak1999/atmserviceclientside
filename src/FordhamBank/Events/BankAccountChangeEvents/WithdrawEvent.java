@@ -21,6 +21,8 @@ public class WithdrawEvent implements IBankAccountChangeEvent {
             IBankAccountChangeEvent.updateChart(user);
             IBankAccountChangeEvent.updateBankAccountList(user);
 
+            IBankAccountChangeEvent.updateServer(bankAccount.GetId(), bankAccount.GetBalance());
+
             return OperationResult.SUCCESS;
         } else {
             Alert alert = new Alert(Alert.AlertType.ERROR);

@@ -47,6 +47,17 @@ public class BankAccount extends Aggregate {
         FileW = new fileIO();
     }
 
+    public BankAccount(UUID userId, String accountName, AccountType accountType, double balance, UUID bankAccountId) {
+        super(bankAccountId);
+
+        AccountType = accountType;
+        AccountName = accountName;
+        UserId = userId;
+        Transactions = new ArrayList<>();
+        Balance = balance;
+        FileW = new fileIO();
+    }
+
     public String GetAccountName() {
         return AccountName;
     }

@@ -21,6 +21,8 @@ public class DepositEvent implements IBankAccountChangeEvent {
 	
 	        IBankAccountChangeEvent.updateBankAccountList(user);
 	        IBankAccountChangeEvent.updateChart(user);
+
+	        IBankAccountChangeEvent.updateServer(bankAccount.GetId(), bankAccount.GetBalance());
 	
 	        return OperationResult.SUCCESS;
     	} else {

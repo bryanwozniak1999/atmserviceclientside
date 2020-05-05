@@ -149,7 +149,7 @@ public class Main extends Application {
             if (!accountsAsString.contains("NACK")) {
                 for (var account: accountsAsList) {
                     String args[] = account.split(",");
-                    user.AddBankAccount(new BankAccount(user.GetId(), args[0], AccountType.valueOf(args[1]), UUID.fromString(args[3])));
+                    user.AddBankAccount(new BankAccount(user.GetId(), args[0], AccountType.valueOf(args[1]), Double.parseDouble(args[2]),UUID.fromString(args[3])));
                 }
             }
         } else { // get nothin
