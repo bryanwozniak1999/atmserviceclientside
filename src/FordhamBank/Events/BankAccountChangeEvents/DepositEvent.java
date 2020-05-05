@@ -9,13 +9,18 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 
+import java.util.Date;
+import java.util.TimeZone;
+
 public class DepositEvent implements IBankAccountChangeEvent {
     @Override
     public OperationResult fireEvent(User user, BankAccount bankAccount, String amount) {
     	if (Main.connected == true) {
-	        bankAccount.Deposit(Double.parseDouble(amount));
+			TimeZone.setDefault(TimeZone.getTimeZone("EST"));
+    		var date = new Date();
+	        bankAccount.Deposit(Double.parseDouble(amount), date);
 	        
-	        String msg = "BankTransaction>" + "DEPOSIT," + bankAccount.GetAccountName() + "," + amount + "," + bankAccount.GetId();
+	        String msg = "BankTransaction>" + "DEPOSIT," + bankAccount.GetAccountName() + "," + bankAccount.GetBalance() + "," + amount + "," + date + "," + bankAccount.GetId();
 	        
 	        Main.su.sendMessage(msg);
 	

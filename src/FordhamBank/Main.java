@@ -23,8 +23,11 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Paint;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.TimeZone;
 import java.util.UUID;
 
 public class Main extends Application {
@@ -162,7 +165,21 @@ public class Main extends Application {
                         for (var transaction : transactionsAsList) {
                             String transactionArgs[] = transaction.split(",");
 
-                            Transaction transactionObject = new Transaction(new Date(), Double.parseDouble(transactionArgs[2]), 0.0, TransactionType.valueOf(transactionArgs[0]));
+                            TimeZone.setDefault(TimeZone.getTimeZone("EST"));
+
+
+                            SimpleDateFormat formatter = new SimpleDateFormat("EEE MMM d HH:mm:ss zzz yyyy");
+
+                            Date formattedDate;
+
+                            try {
+                                formattedDate = formatter.parse(transactionArgs[4]);
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                                return;
+                            }
+
+                            Transaction transactionObject = new Transaction(formattedDate, Double.parseDouble(transactionArgs[3]), Double.parseDouble(transactionArgs[2]), TransactionType.valueOf(transactionArgs[0]));
 
                             accountObject.AddTransaction(transactionObject);
                         }
