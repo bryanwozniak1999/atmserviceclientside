@@ -15,7 +15,7 @@ public class DepositEvent implements IBankAccountChangeEvent {
     	if (Main.connected == true) {
 	        bankAccount.Deposit(Double.parseDouble(amount));
 	        
-	        String msg = "Deposit>" + bankAccount.GetAccountName() + "," + amount + "," + bankAccount.GetId();
+	        String msg = "BankTransaction>" + "Deposit," + bankAccount.GetAccountName() + "," + amount + "," + bankAccount.GetId();
 	        
 	        Main.su.sendMessage(msg);
 	
