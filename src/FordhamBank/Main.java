@@ -12,17 +12,22 @@ import FordhamBank.UI.AddBankAccountButton;
 import FordhamBank.UI.HelpWindow;
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.Tooltip;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Paint;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -41,7 +46,7 @@ public class Main extends Application {
         connected = su.socketConnect();
 
         //data set up
-        User user = new User("John", "Doe");
+        User user = selectUser();
         setAccounts(user);
 
         VBox root = new VBox();
@@ -66,7 +71,7 @@ public class Main extends Application {
         
         bankAccountListContainer.setSpacing(10);
         bankAccountListContainer.setPadding(new Insets(10));
-
+        
         Label name = new Label("Hello, " + user.GetFullName());
         root.getChildren().add(name);
         // bank accounts on the left
@@ -98,6 +103,7 @@ public class Main extends Application {
         helpButton.setMaxHeight(50);
         helpButton.setMaxWidth(50);
         helpButton.setText("HELP");
+        helpButton.setTooltip(new Tooltip("Displays Help Window"));
 
         helpButton.setOnAction(event -> {
             HelpWindow helpWindow = new HelpWindow(primaryStage);
@@ -107,6 +113,7 @@ public class Main extends Application {
 
         Button exitButton = new Button();
         exitButton.setText("EXIT");
+        exitButton.setTooltip(new Tooltip("Exits the program."));
 
         exitButton.setOnAction(e -> {
             primaryStage.close();
@@ -139,6 +146,51 @@ public class Main extends Application {
         timer.start();
         
         root.getChildren().add(clock);
+    }
+    
+    private User selectUser() {
+    	Stage window = new Stage();
+    	//window.initStyle(StageStyle.UTILITY);
+    	VBox container = new VBox();
+    	container.getStylesheets().add("/FordhamBank/Styles/styles.css");
+    	container.setSpacing(10);
+        container.setPadding(new Insets(10));
+    	
+    	Label topMessage = new Label("Select a User");
+    	container.getChildren().add(topMessage);
+    	//User selectedUser;
+    	
+    	// drop down menu with users
+    	// drop down of users names or ids
+        String users[] = {"John Doe", "Jane Doe", "Anonymous ?"};
+        
+        //Label selected = new Label("Selected: " + users[0]);
+        ComboBox<String> list = new ComboBox<String>(FXCollections.observableArrayList(users));
+        list.getSelectionModel().selectFirst();
+        list.setOnAction(e -> {
+        	System.out.println("Selected: " + list.getValue());
+        });
+        
+        // Button to select
+        Button select = new Button("Select");
+        select.getStyleClass().add("button");
+        select.setTooltip(new Tooltip("Selects chosen user"));
+        select.setOnAction(e -> {
+        	window.hide();
+        });
+        
+        container.getChildren().addAll(list, select);
+        
+        // window is displayed until user is chosen
+        Scene scene = new Scene(container, 250, 250);
+        window.setScene(scene);
+        window.setTitle("Select User");
+        window.showAndWait();
+        
+        // separates by white space 
+        String[] splitStr = list.getValue().split("\\s+");
+    	
+		return new User(splitStr[0], splitStr[1]);
     }
 
     

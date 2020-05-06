@@ -9,6 +9,7 @@ import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.Tooltip;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
@@ -46,21 +47,25 @@ public class BankAccountListItem {
 
         Button withdraw = new Button("Withdraw");
         withdraw.getStyleClass().add("button");
+        withdraw.setTooltip(new Tooltip("Withdraws money from account"));
         withdraw.setOnAction(e -> {
             fireWithdrawButtonClickEvent(user, bankAccount);
         });
         Button deposit = new Button("Deposit");
         deposit.getStyleClass().add("button");
+        deposit.setTooltip(new Tooltip("Deposits money to account"));
         deposit.setOnAction(e -> {
             fireDepositButtonClickEvent(user, bankAccount);
         });
         Button transfer = new Button("Transfer");
         transfer.getStyleClass().add("button");
+        transfer.setTooltip(new Tooltip("Transfers money from one account to another"));
         transfer.setOnAction(e -> {
             fireTransferButtonClickEvent(user, bankAccount);
         });
         Button history = new Button("History");
         history.getStyleClass().add("button");
+        history.setTooltip(new Tooltip("Displays transaction history for this account"));
         history.setOnAction(e -> {
             fireHistoryButtonClickEvent(bankAccount);
         });
