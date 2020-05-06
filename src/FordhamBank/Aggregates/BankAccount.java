@@ -36,6 +36,28 @@ public class BankAccount extends Aggregate {
         FileW = new fileIO();
     }
 
+    public BankAccount(UUID userId, String accountName, AccountType accountType, UUID bankAccountId) {
+        super(bankAccountId);
+
+        AccountType = accountType;
+        AccountName = accountName;
+        UserId = userId;
+        Transactions = new ArrayList<>();
+        Balance = 0;
+        FileW = new fileIO();
+    }
+
+    public BankAccount(UUID userId, String accountName, AccountType accountType, double balance, UUID bankAccountId) {
+        super(bankAccountId);
+
+        AccountType = accountType;
+        AccountName = accountName;
+        UserId = userId;
+        Transactions = new ArrayList<>();
+        Balance = balance;
+        FileW = new fileIO();
+    }
+
     public String GetAccountName() {
         return AccountName;
     }
@@ -45,14 +67,14 @@ public class BankAccount extends Aggregate {
         return Balance;
     }
 
-    public void Deposit(double amount) {
+    public void Deposit(double amount, Date date) {
         amount = Math.floor(amount * 100) / 100;
 
         Balance += amount;
 
         Balance = Math.floor(Balance * 100) / 100;
 
-        AddTransaction(new Transaction(new Date(), amount, Balance, TransactionType.DEPOSIT));
+        AddTransaction(new Transaction(date, amount, Balance, TransactionType.DEPOSIT));
         FileW.wrTransactionData("User deposited " + amount + " to " + AccountName);
     }
 
@@ -60,7 +82,7 @@ public class BankAccount extends Aggregate {
         return AccountType;
     }
 
-    public OperationResult Withdraw(double amount) {
+    public OperationResult Withdraw(double amount, Date date) {
         amount = Math.floor(amount * 100) / 100;
 
         double newBalance = Balance - amount;
@@ -73,7 +95,7 @@ public class BankAccount extends Aggregate {
 
         Balance = Math.floor(Balance * 100) / 100;
 
-        AddTransaction(new Transaction(new Date(), amount, Balance, TransactionType.WITHDRAWAL));
+        AddTransaction(new Transaction(date, amount, Balance, TransactionType.WITHDRAWAL));
         FileW.wrTransactionData("User withdrew " + amount + " from " + AccountName);
 
         return OperationResult.SUCCESS;
@@ -87,7 +109,7 @@ public class BankAccount extends Aggregate {
         return Transactions;
     }
 
-    private void AddTransaction(Transaction transaction) {
+    public void AddTransaction(Transaction transaction) {
         Transactions.add(transaction);
     }
 }

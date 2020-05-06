@@ -1,8 +1,10 @@
 package FordhamBank;
 
 import FordhamBank.Aggregates.BankAccount;
+import FordhamBank.Aggregates.Transaction;
 import FordhamBank.Aggregates.User;
 import FordhamBank.Enums.AccountType;
+import FordhamBank.Enums.TransactionType;
 import FordhamBank.Factories.BankAccountListFactory;
 import FordhamBank.Factories.DonutChartFactory;
 import FordhamBank.ServerUtils.socketUtils;
@@ -21,8 +23,11 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Paint;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.TimeZone;
 import java.util.UUID;
 
 public class Main extends Application {
@@ -145,9 +150,43 @@ public class Main extends Application {
             String accountsAsString = su.recvMessage();
             String accountsAsList[] = accountsAsString.split("\\>");
 
-            for (var account: accountsAsList) {
-                String args[] = account.split(",");
-                user.AddBankAccount(new BankAccount(user.GetId(), args[0], AccountType.valueOf(args[1])));
+            // if theres a NACK we know there are no bank accounts in the DB
+            if (!accountsAsString.contains("NACK")) {
+                for (var account: accountsAsList) {
+                    String bankAccountArgs[] = account.split(",");
+
+                    BankAccount accountObject = new BankAccount(user.GetId(), bankAccountArgs[0], AccountType.valueOf(bankAccountArgs[1]), Double.parseDouble(bankAccountArgs[2]),UUID.fromString(bankAccountArgs[3]));
+                    su.sendMessage("TransactionsQuery>" + bankAccountArgs[3]);
+
+                    String transactionsAsString = su.recvMessage();
+                    String transactionsAsList[] = transactionsAsString.split("\\>");
+
+                    if (!transactionsAsString.contains("NACK")) {
+                        for (var transaction : transactionsAsList) {
+                            String transactionArgs[] = transaction.split(",");
+
+                            TimeZone.setDefault(TimeZone.getTimeZone("EST"));
+
+
+                            SimpleDateFormat formatter = new SimpleDateFormat("EEE MMM d HH:mm:ss zzz yyyy");
+
+                            Date formattedDate;
+
+                            try {
+                                formattedDate = formatter.parse(transactionArgs[4]);
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                                return;
+                            }
+
+                            Transaction transactionObject = new Transaction(formattedDate, Double.parseDouble(transactionArgs[3]), Double.parseDouble(transactionArgs[2]), TransactionType.valueOf(transactionArgs[0]));
+
+                            accountObject.AddTransaction(transactionObject);
+                        }
+                    }
+
+                    user.AddBankAccount(accountObject);
+                }
             }
         } else { // get nothin
             Alert alert = new Alert(Alert.AlertType.ERROR);
