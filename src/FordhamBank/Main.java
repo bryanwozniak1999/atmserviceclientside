@@ -10,6 +10,7 @@ import FordhamBank.Factories.DonutChartFactory;
 import FordhamBank.ServerUtils.socketUtils;
 import FordhamBank.UI.AddBankAccountButton;
 import FordhamBank.UI.HelpWindow;
+import FordhamBank.UI.exitMenu;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -116,7 +117,8 @@ public class Main extends Application {
         exitButton.setTooltip(new Tooltip("Exits the program."));
 
         exitButton.setOnAction(e -> {
-            primaryStage.close();
+        	exitMenu exitwindow = new exitMenu(primaryStage);
+            exitwindow.show();
         });
 
         bankAccountListButtons.getChildren().addAll(helpButton, exitButton);
