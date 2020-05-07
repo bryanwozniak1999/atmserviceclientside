@@ -2,6 +2,7 @@ package FordhamBank.Aggregates;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class User extends Aggregate {
     private String FirstName;
@@ -10,6 +11,14 @@ public class User extends Aggregate {
 
     public User(String firstName, String lastName) {
         super();
+
+        FirstName = firstName;
+        LastName = lastName;
+        BankAccounts = new ArrayList<>();
+    }
+
+    public User(String firstName, String lastName, UUID userId) {
+        super(userId);
 
         FirstName = firstName;
         LastName = lastName;

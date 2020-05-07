@@ -29,9 +29,11 @@ import javafx.scene.paint.Paint;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.util.StringConverter;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.TimeZone;
 import java.util.UUID;
@@ -46,113 +48,120 @@ public class Main extends Application {
     public void start(Stage primaryStage) {
         connected = su.socketConnect();
 
-        //data set up
-        User user = selectUser();
-        setAccounts(user);
+        if (connected) {
+            User user = selectUser();
+            setAccounts(user);
 
-        VBox root = new VBox();
-        root.setPadding(new Insets(10));
-        root.getStylesheets().add("/FordhamBank/Styles/styles.css");
-        
-        // This HBox is used to have the accounts and Pie chart side by side
-        HBox main = new HBox();
+            VBox root = new VBox();
+            root.setPadding(new Insets(10));
+            root.getStylesheets().add("/FordhamBank/Styles/styles.css");
+
+            // This HBox is used to have the accounts and Pie chart side by side
+            HBox main = new HBox();
 
 
-        VBox bankAccountListContainer = new VBox();
+            VBox bankAccountListContainer = new VBox();
 
-        HBox bankAccountListButtons = new HBox();
-        bankAccountListButtons.setSpacing(15);
+            HBox bankAccountListButtons = new HBox();
+            bankAccountListButtons.setSpacing(15);
 
-        bankAccountListContent.setMinWidth(350);
-        bankAccountListContent.setSpacing(10);
-        ScrollPane leftScroll = new ScrollPane(bankAccountListContent);
-        leftScroll.setMinWidth(360);
-        leftScroll.setMaxHeight(500);
-        leftScroll.setFitToWidth(true);
-        
-        bankAccountListContainer.setSpacing(10);
-        bankAccountListContainer.setPadding(new Insets(10));
-        
-        Label name = new Label("Hello, " + user.GetFullName());
-        root.getChildren().add(name);
-        // bank accounts on the left
-        BankAccountListFactory.CreateAndDisplay(user);
-        
-        bankAccountListContainer.getChildren().add(leftScroll);
+            bankAccountListContent.setMinWidth(350);
+            bankAccountListContent.setSpacing(10);
+            ScrollPane leftScroll = new ScrollPane(bankAccountListContent);
+            leftScroll.setMinWidth(360);
+            leftScroll.setMaxHeight(500);
+            leftScroll.setFitToWidth(true);
 
-        Button add = AddBankAccountButton.Create(user);
+            bankAccountListContainer.setSpacing(10);
+            bankAccountListContainer.setPadding(new Insets(10));
 
-        bankAccountListButtons.getChildren().add(add);
+            Label name = new Label("Hello, " + user.GetFullName());
+            root.getChildren().add(name);
+            // bank accounts on the left
+            BankAccountListFactory.CreateAndDisplay(user);
 
-        //donut chart on the right
-        DonutChartFactory.CreateAndDisplay(user);
+            bankAccountListContainer.getChildren().add(leftScroll);
 
-        // add the layouts to main
-        main.getChildren().add(bankAccountListContainer);
-        main.getChildren().add(donutChartContainer);
+            Button add = AddBankAccountButton.Create(user);
 
-        root.getChildren().add(main);
+            bankAccountListButtons.getChildren().add(add);
 
-        Scene scene = new Scene(root, 800, 600);
-        scene.setFill(Paint.valueOf("WHITE"));
+            //donut chart on the right
+            DonutChartFactory.CreateAndDisplay(user);
 
-        primaryStage.setTitle("Accounts Summary");
-        primaryStage.setScene(scene);
-        primaryStage.show();
+            // add the layouts to main
+            main.getChildren().add(bankAccountListContainer);
+            main.getChildren().add(donutChartContainer);
 
-        Button helpButton = new Button();
-        helpButton.setMaxHeight(50);
-        helpButton.setMaxWidth(50);
-        helpButton.setText("HELP");
-        helpButton.setTooltip(new Tooltip("Displays Help Window"));
+            root.getChildren().add(main);
 
-        helpButton.setOnAction(event -> {
-            HelpWindow helpWindow = new HelpWindow(primaryStage);
+            Scene scene = new Scene(root, 800, 600);
+            scene.setFill(Paint.valueOf("WHITE"));
 
-            helpWindow.show();
-        });
+            primaryStage.setTitle("Accounts Summary");
+            primaryStage.setScene(scene);
+            primaryStage.show();
 
-        Button exitButton = new Button();
-        exitButton.setText("EXIT");
-        exitButton.setTooltip(new Tooltip("Exits the program."));
+            Button helpButton = new Button();
+            helpButton.setMaxHeight(50);
+            helpButton.setMaxWidth(50);
+            helpButton.setText("HELP");
+            helpButton.setTooltip(new Tooltip("Displays Help Window"));
 
-        exitButton.setOnAction(e -> {
-        	exitMenu exitwindow = new exitMenu(primaryStage);
-            exitwindow.show();
-        });
+            helpButton.setOnAction(event -> {
+                HelpWindow helpWindow = new HelpWindow(primaryStage);
 
-        bankAccountListButtons.getChildren().addAll(helpButton, exitButton);
+                helpWindow.show();
+            });
 
-        bankAccountListContainer.getChildren().add(bankAccountListButtons);
+            Button exitButton = new Button();
+            exitButton.setText("EXIT");
+            exitButton.setTooltip(new Tooltip("Exits the program."));
 
-        //clock
-        
-        Text clock = new Text();
-    	boolean runTimer = true;
+            exitButton.setOnAction(e -> {
+                exitMenu exitwindow = new exitMenu(primaryStage);
+                exitwindow.show();
+            });
 
-        Thread timer = new Thread(() -> {
-            SimpleDateFormat hms = new SimpleDateFormat("hh:mm:ss");
-            while(runTimer) {
-                try {
-                    Thread.sleep(1000);
-                    final String time = hms.format(new Date());
-                    Platform.runLater(() -> {
-                        clock.setText(time);
-                    });
-                } catch(InterruptedException e) { }
-            }
-        });
+            bankAccountListButtons.getChildren().addAll(helpButton, exitButton);
 
-        timer.setDaemon(true);
+            bankAccountListContainer.getChildren().add(bankAccountListButtons);
 
-        timer.start();
-        
-        root.getChildren().add(clock);
+            //clock
+
+            Text clock = new Text();
+            boolean runTimer = true;
+
+            Thread timer = new Thread(() -> {
+                SimpleDateFormat hms = new SimpleDateFormat("hh:mm:ss");
+                while(runTimer) {
+                    try {
+                        Thread.sleep(1000);
+                        final String time = hms.format(new Date());
+                        Platform.runLater(() -> {
+                            clock.setText(time);
+                        });
+                    } catch(InterruptedException e) { }
+                }
+            });
+
+            timer.setDaemon(true);
+
+            timer.start();
+
+            root.getChildren().add(clock);
+        } else {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("--- Network Communications Error ---");
+            alert.setHeaderText("Unable to talk to Socket Server!");
+
+            alert.showAndWait();
+        }
     }
     
     private User selectUser() {
     	Stage window = new Stage();
-    	//window.initStyle(StageStyle.UTILITY);
+
     	VBox container = new VBox();
     	container.getStylesheets().add("/FordhamBank/Styles/styles.css");
     	container.setSpacing(10);
@@ -160,17 +169,38 @@ public class Main extends Application {
     	
     	Label topMessage = new Label("Select a User");
     	container.getChildren().add(topMessage);
-    	//User selectedUser;
+
+    	//Get users from server
+        Main.su.sendMessage("GetUsers");
+
+        String usersAsString = Main.su.recvMessage();
     	
     	// drop down menu with users
     	// drop down of users names or ids
-        String users[] = {"John Doe", "Jane Doe", "Anonymous ?"};
+        String usersAsList[] = usersAsString.split("\\>");
+
+        ArrayList<User> users = new ArrayList<>();
+
+        for ( var u : usersAsList) {
+            String args[] = u.split("\\,");
+            users.add(new User(args[0], args[1], UUID.fromString(args[2])));
+        }
         
         //Label selected = new Label("Selected: " + users[0]);
-        ComboBox<String> list = new ComboBox<String>(FXCollections.observableArrayList(users));
+        ComboBox<User> list = new ComboBox<User>(FXCollections.observableArrayList(users));
         list.getSelectionModel().selectFirst();
-        list.setOnAction(e -> {
-        	System.out.println("Selected: " + list.getValue());
+
+        list.setConverter(new StringConverter<User>() {
+            @Override
+            public String toString(User object) {
+                return object.GetFullName();
+            }
+
+            @Override
+            public User fromString(String string) {
+                return list.getItems().stream().filter(u ->
+                        u.GetFullName().equals(string)).findFirst().orElse(null);
+            }
         });
         
         // Button to select
@@ -188,11 +218,10 @@ public class Main extends Application {
         window.setScene(scene);
         window.setTitle("Select User");
         window.showAndWait();
-        
-        // separates by white space 
-        String[] splitStr = list.getValue().split("\\s+");
+
+        User selectedUser = list.getValue();
     	
-		return new User(splitStr[0], splitStr[1]);
+		return new User(selectedUser.GetFirstName(), selectedUser.GetLastName(), selectedUser.GetId());
     }
 
     
@@ -200,12 +229,12 @@ public class Main extends Application {
 
         // if you can connect get the accounts from the file
         if (connected) {
-            su.sendMessage("BankAccountsQuery>");
+            su.sendMessage("BankAccountsQuery>" + user.GetId().toString());
             String accountsAsString = su.recvMessage();
             String accountsAsList[] = accountsAsString.split("\\>");
 
             // if theres a NACK we know there are no bank accounts in the DB
-            if (!accountsAsString.contains("NACK")) {
+            if (!accountsAsString.contains("NACK") && !accountsAsString.isEmpty()) {
                 for (var account: accountsAsList) {
                     String bankAccountArgs[] = account.split(",");
 
